@@ -10,6 +10,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.util.RandomSource;
 import org.jetbrains.annotations.NotNull;
+import net.minecraft.server.level.ServerLevel;
 
 public class GrayTabbyCat extends Cat {
     public GrayTabbyCat(EntityType<GrayTabbyCat> type, Level level) {
@@ -23,6 +24,10 @@ public class GrayTabbyCat extends Cat {
 
     public GrayTabbyCat(Level level, BlockPos position) {
         this(level, position.getX(), position.getY(), position.getZ());
+    }
+
+    public Cat getBreedOffspring(ServerLevel level, Cat otherParent) {
+        return new GrayTabbyCat(level, this.blockPosition());
     }
 
     public static AttributeSupplier.@NotNull Builder createAttributes() {
