@@ -10,7 +10,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.util.RandomSource;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.AgeableMob;
 
 public class GrayTabbyCat extends Cat {
     public GrayTabbyCat(EntityType<GrayTabbyCat> type, Level level) {
@@ -26,7 +28,9 @@ public class GrayTabbyCat extends Cat {
         this(level, position.getX(), position.getY(), position.getZ());
     }
 
-    public Cat getBreedOffspring(ServerLevel level, Cat otherParent) {
+    @Nullable
+    @Override
+    public Cat getBreedOffspring(ServerLevel level, AgeableMob otherParent) {
         return new GrayTabbyCat(level, this.blockPosition());
     }
 
