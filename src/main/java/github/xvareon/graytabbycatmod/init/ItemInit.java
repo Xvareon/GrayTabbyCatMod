@@ -12,5 +12,5 @@ public class ItemInit {
 
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, GrayTabbyCatMod.MODID);
     public static final RegistryObject<ForgeSpawnEggItem> GRAY_TABBY_CAT_SPAWN_EGG = addToTab(ITEMS.register("gray_tabby_cat_spawn_egg",
-            () -> new ForgeSpawnEggItem(EntityInit.GRAY_TABBY_CAT, 0x424242, 0x1A1919, new Item.Properties())));
+            () -> new ForgeSpawnEggItem(EntityInit.GRAY_TABBY_CAT, 0x746d67, 0x413b37, new Item.Properties())));
 }

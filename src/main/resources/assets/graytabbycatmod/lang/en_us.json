@@ -1,4 +1,5 @@
 {
-  "itemGroup.gray_tabby_cat_tab": "Gray Tabby Cat Tab",
+  "itemGroup.gray_tabby_cat_tab": "Gray Tabby",
+  "item.graytabbycatmod.gray_tabby_cat_spawn_egg": "Spawn Gray Tabby Cat",
   "entity.graytabbycatmod.gray_tabby_cat": "Gray Tabby Cat"
 }
