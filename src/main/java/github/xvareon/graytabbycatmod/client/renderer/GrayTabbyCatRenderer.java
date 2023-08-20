@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.client.model.CatModel;
 import net.minecraft.client.model.geom.ModelLayers;
+import org.jetbrains.annotations.NotNull;
 
 public class GrayTabbyCatRenderer extends MobRenderer<GrayTabbyCat, CatModel<GrayTabbyCat>> {
 
@@ -17,7 +18,7 @@ public class GrayTabbyCatRenderer extends MobRenderer<GrayTabbyCat, CatModel<Gra
     }
 
     @Override
-    public ResourceLocation getTextureLocation(GrayTabbyCat entity){
+    public @NotNull ResourceLocation getTextureLocation(@NotNull GrayTabbyCat entity){
         return TEXTURE;
     }
 }
