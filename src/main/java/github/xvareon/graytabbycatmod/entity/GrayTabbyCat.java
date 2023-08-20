@@ -18,6 +18,13 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.DyeItem;
 
 public class GrayTabbyCat extends Cat {
 
@@ -27,28 +34,9 @@ public class GrayTabbyCat extends Cat {
         super(type, level);
     }
 
-    public GrayTabbyCat(Level level, double x, double y, double z) {
-        this(EntityInit.GRAY_TABBY_CAT.get(), level);
-        setPos(x, y, z);
-    }
-
     public GrayTabbyCat(Level level, BlockPos position) {
-        this(level, position.getX(), position.getY(), position.getZ());
-    }
-
-    @Override
-    public Cat getBreedOffspring(@NotNull ServerLevel level, @NotNull AgeableMob otherParent) {
-
-        GrayTabbyCat babycat = new GrayTabbyCat(level, this.blockPosition());
-
-        // Set the ownership of the baby
-        UUID uuid = this.getOwnerUUID();
-        if (uuid != null) {
-            babycat.setOwnerUUID(uuid);
-            babycat.setTame(true);
-        }
-
-        return babycat;
+        super(EntityInit.GRAY_TABBY_CAT.get(), level);
+        this.setPos(position.getX(), position.getY(), position.getZ());
     }
 
     @Override
@@ -65,11 +53,60 @@ public class GrayTabbyCat extends Cat {
         this.entityData.set(COLLAR_COLOR, collarcolor.getId());
     }
 
+    // For Dye saves
+    @Override
+    public void addAdditionalSaveData(@NotNull CompoundTag compound) {
+        super.addAdditionalSaveData(compound);
+        compound.putByte("CollarColor", (byte)this.getCollarColor().getId());
+    }
+
+    @Override
+    public void readAdditionalSaveData(@NotNull CompoundTag compound) {
+        super.readAdditionalSaveData(compound);
+        if (compound.contains("CollarColor"))
+            this.setCollarColor(DyeColor.byId(compound.getByte("CollarColor")));
+    }
+
+    // For Dye
+    @Override
+    public @NotNull InteractionResult mobInteract(Player player, @NotNull InteractionHand hand) {
+        ItemStack itemstack = player.getItemInHand(hand);
+        Item item = itemstack.getItem();
+
+        if (item instanceof DyeItem) {
+            DyeColor dyecolor = ((DyeItem) item).getDyeColor();
+            if (dyecolor != this.getCollarColor()) {
+                this.setCollarColor(dyecolor);
+                if (!player.getAbilities().instabuild) {
+                    itemstack.shrink(1);
+                }
+                return InteractionResult.SUCCESS;
+            }
+        }
+
+        return super.mobInteract(player, hand);
+    }
+
     public static AttributeSupplier.@NotNull Builder createAttributes() {
         return Cat.createAttributes();
     }
 
     public static boolean canSpawn(EntityType<GrayTabbyCat> entityType, LevelAccessor level, MobSpawnType spawnType, BlockPos position, RandomSource random) {
         return Cat.checkAnimalSpawnRules(entityType, level, spawnType, position, random);
+    }
+
+    @Override
+    public Cat getBreedOffspring(@NotNull ServerLevel level, @NotNull AgeableMob otherParent) {
+
+        GrayTabbyCat babycat = new GrayTabbyCat(level, this.blockPosition());
+
+        // Set the ownership of the baby
+        UUID uuid = this.getOwnerUUID();
+        if (uuid != null) {
+            babycat.setOwnerUUID(uuid);
+            babycat.setTame(true);
+        }
+
+        return babycat;
     }
 }
