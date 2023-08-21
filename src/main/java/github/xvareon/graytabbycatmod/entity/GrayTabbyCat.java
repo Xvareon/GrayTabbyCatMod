@@ -42,7 +42,7 @@ public class GrayTabbyCat extends Cat {
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-        entityData.define(COLLAR_COLOR, DyeColor.YELLOW.getId());
+        entityData.define(COLLAR_COLOR, DyeColor.GRAY.getId());
     }
 
     public @NotNull DyeColor getCollarColor() {
@@ -73,14 +73,16 @@ public class GrayTabbyCat extends Cat {
         ItemStack itemstack = player.getItemInHand(hand);
         Item item = itemstack.getItem();
 
-        if (item instanceof DyeItem) {
-            DyeColor dyecolor = ((DyeItem) item).getDyeColor();
-            if (dyecolor != this.getCollarColor()) {
-                this.setCollarColor(dyecolor);
-                if (!player.getAbilities().instabuild) {
-                    itemstack.shrink(1);
+        if (this.isTame()){
+            if (item instanceof DyeItem) {
+                DyeColor dyecolor = ((DyeItem) item).getDyeColor();
+                if (dyecolor != this.getCollarColor()) {
+                    this.setCollarColor(dyecolor);
+                    if (!player.getAbilities().instabuild) {
+                        itemstack.shrink(1);
+                    }
+                    return InteractionResult.SUCCESS;
                 }
-                return InteractionResult.SUCCESS;
             }
         }
 

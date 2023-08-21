@@ -20,7 +20,7 @@ public class GrayTabbyCatRenderer extends MobRenderer<GrayTabbyCat, CatModel<Gra
     private static final ResourceLocation COLLAR = new ResourceLocation(GrayTabbyCatMod.MODID, "textures/collar.png");
 
     public GrayTabbyCatRenderer (EntityRendererProvider.Context ctx){
-        super(ctx, new CatModel<>(ctx.bakeLayer(ModelLayers.CAT)), 0.4F);
+        super(ctx, new CatModel<>(ctx.bakeLayer(ModelLayers.CAT)), 0.5F);
 
         addLayer(new GrayTabbyCatCollarLayer(this));
     }
@@ -40,7 +40,10 @@ public class GrayTabbyCatRenderer extends MobRenderer<GrayTabbyCat, CatModel<Gra
         public void render(@NotNull PoseStack matrix, @NotNull MultiBufferSource buffer, int light, @NotNull GrayTabbyCat entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
 
             float[] afloat = entity.getCollarColor().getTextureDiffuseColors();
+
             renderColoredCutoutModel(getParentModel(), COLLAR, matrix, buffer, light, entity, afloat[0], afloat[1], afloat[2]);
+
         }
+
     }
 }
