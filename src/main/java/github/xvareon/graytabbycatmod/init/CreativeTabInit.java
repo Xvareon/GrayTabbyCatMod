@@ -42,8 +42,11 @@ public class CreativeTabInit {
 
     @SubscribeEvent
     public static void buildContents(BuildCreativeModeTabContentsEvent event) {
-        if(event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS) {
+        if(event.getTabKey() == CreativeModeTabs.SPAWN_EGGS) {
             event.getEntries().putAfter(Items.ACACIA_LOG.getDefaultInstance(), ItemInit.GRAY_TABBY_CAT_SPAWN_EGG.get().getDefaultInstance(), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
+        }
+        if(event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS) {
+            event.getEntries().putAfter(Items.ACACIA_LOG.getDefaultInstance(), ItemInit.GLOWING_OBSIDIAN.get().getDefaultInstance(), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
         }
 
         if(event.getTab() == GRAY_TABBY_CAT_TAB.get()) {
