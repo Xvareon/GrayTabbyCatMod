@@ -46,9 +46,8 @@ public class CreativeTabInit {
             event.getEntries().putAfter(Items.ACACIA_LOG.getDefaultInstance(), ItemInit.GRAY_TABBY_CAT_SPAWN_EGG.get().getDefaultInstance(), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
         }
 
-        // Replace this with glowing obsidian, also change the creative tab name and fiddle with the hex color
         if(event.getTab() == GRAY_TABBY_CAT_TAB.get()) {
-            event.accept(Items.CROSSBOW);
+            event.accept(ItemInit.GLOWING_OBSIDIAN.get());
         }
     }
 }

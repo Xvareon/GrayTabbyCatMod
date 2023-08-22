@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:blasting",
+  "experience": 0,
+  "cookingtime": 100,
+  "ingredient": {
+    "item": "minecraft:obsidian"
+  },
+  "result": "graytabbycatmod:glowing_obsidian"
+}
