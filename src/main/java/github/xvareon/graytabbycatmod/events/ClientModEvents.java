@@ -16,9 +16,4 @@ public class ClientModEvents {
     public static void registerRenderer(EntityRenderersEvent.RegisterRenderers event){
         event.registerEntityRenderer(EntityInit.GRAY_TABBY_CAT.get(), GrayTabbyCatRenderer::new);
     }
-
-//    @SubscribeEvent
-//    public static void registerLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event){
-//
-//    }
 }
