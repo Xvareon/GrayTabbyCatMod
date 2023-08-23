@@ -1,1 +1,0 @@
-A 1.20.1 forge mod that adds Gray Tabby cat variants to your minecraft world.
