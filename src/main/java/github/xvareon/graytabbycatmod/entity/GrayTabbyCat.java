@@ -215,17 +215,16 @@ public class GrayTabbyCat extends Cat {
 
             // If the entity is not grabbing a target, set it to move to its target
             if(attacker.getPassengers().isEmpty()) {
-                this.attacker.navigation.moveTo(this.attacker.navigation.createPath(entitylivingbase.blockPosition(), 0), 0.4D);
+                this.attacker.navigation.moveTo(this.attacker.navigation.createPath(entitylivingbase.blockPosition(), 0), 1.0D);
             } else { // If the entity is grabbing a target, set it to move upwards
-                this.attacker.navigation.moveTo(this.attacker.navigation.createPath(new BlockPos((int) targetX, (int) this.liftY + 15, (int) targetZ), 0), 0.4D);
+                this.attacker.navigation.moveTo(this.attacker.navigation.createPath(new BlockPos((int) targetX, (int) this.liftY + 15, (int) targetZ), 0), 1.0D);
             }
 
             // If the entity is in range and entity is not grabbing a target and
             // the target's height is less than 3 blocks
             if(distanceToTarget <= reachToTarget && attacker.getPassengers().isEmpty() && entitylivingbase.getBbHeight() <= 3 && this.attackTick == 15) {
                 // Move the entity upwards to avoid being stuck in the ground
-                // this.attacker.moveTo(this.attacker.getX(), this.attacker.getY() + entitylivingbase.getBbHeight() + 40,
-                this.attacker.moveTo(this.attacker.getX(), this.attacker.getY() + entitylivingbase.getBbHeight() + 2,
+                 this.attacker.moveTo(this.attacker.getX(), this.attacker.getY() + entitylivingbase.getBbHeight() + 40,
                         this.attacker.getZ(), this.attacker.getYRot(), this.attacker.getXRot());
                 // Grab the target
                 entitylivingbase.startRiding(this.attacker, true);
@@ -234,14 +233,14 @@ public class GrayTabbyCat extends Cat {
                 // Remove targets of the entity (to avoid something stupid like
                 // a skeleton shooting while being eaten by a bird)
                 if(entitylivingbase instanceof Mob) {
-                    Mob el = (Mob) entitylivingbase;
-                    el.setTarget(null);
-                    el.setLastHurtByMob(null);
-                    el.getNavigation().stop();
-                    el.setNoAi(true);
+                    Mob target = (Mob) entitylivingbase;
+                    target.setTarget(null);
+                    target.setLastHurtByMob(null);
+                    target.getNavigation().stop();
+                    target.setNoAi(true);
                 }
                 // Move upwards
-                this.attacker.navigation.moveTo(this.attacker.navigation.createPath(new BlockPos((int) targetX, (int) this.liftY + 15, (int) targetZ), 0), 0.4D);
+                this.attacker.navigation.moveTo(this.attacker.navigation.createPath(new BlockPos((int) targetX, (int) this.liftY + 15, (int) targetZ), 0), 1.0D);
             }
 
             // If the entity is grabbing a target and the block above is solid
@@ -250,8 +249,8 @@ public class GrayTabbyCat extends Cat {
                 // Release target
                 entitylivingbase.stopRiding();
                 if(entitylivingbase instanceof Mob) {
-                    Mob el = (Mob) entitylivingbase;
-                    el.setNoAi(false);
+                    Mob target = (Mob) entitylivingbase;
+                    target.setNoAi(false);
                 }
                 // Remove target
                 this.attacker.setTarget(null);
@@ -260,16 +259,17 @@ public class GrayTabbyCat extends Cat {
                 BlockPos pos = this.attacker.blockPosition();
                 rPos = rPos.offset(pos);
                 // Move to random target position
-                this.attacker.navigation.moveTo(this.attacker.navigation.createPath(rPos, 0), 0.4D);
+                this.attacker.navigation.moveTo(this.attacker.navigation.createPath(rPos, 0), 1.0D);
             }
 
             // If we've about reached the target lifting point and have a target
             // grabbed, or have completed movement, drop the entity
-            if (Math.abs(this.attacker.getY() - (this.liftY + 15)) <= 3 && attacker.getPassengers().isEmpty()) {
+            // if (Math.abs(this.attacker.getY() - (this.liftY + 15)) <= 3 && !attacker.getPassengers().isEmpty()) {
+            if (!attacker.getPassengers().isEmpty()) {
                 entitylivingbase.stopRiding();
                 if(entitylivingbase instanceof Mob) {
-                    Mob el = (Mob) entitylivingbase;
-                    el.setNoAi(false);
+                    Mob target = (Mob) entitylivingbase;
+                    target.setNoAi(false);
                 }
             }
 
