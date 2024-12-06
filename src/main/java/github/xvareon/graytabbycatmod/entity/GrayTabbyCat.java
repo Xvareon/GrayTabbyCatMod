@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import github.xvareon.graytabbycatmod.init.EntityInit;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.ai.goal.SitWhenOrderedToGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.animal.Cat;
@@ -41,6 +42,7 @@ public class GrayTabbyCat extends Cat {
     public GrayTabbyCat(EntityType<GrayTabbyCat> type, Level level) {
         super(type, level);
 
+        this.goalSelector.addGoal(1, new SitWhenOrderedToGoal(this));
         this.goalSelector.addGoal(2, new AIMeleeAttack(this));
         this.targetSelector.addGoal(2, new OwnerHurtTargetGoal(this) {
             @Override
@@ -208,9 +210,9 @@ public class GrayTabbyCat extends Cat {
             // the timer and attack if the entity is not grabbed
             if(distanceToTarget <= reachToTarget && this.attackTick <= 0) {
                 this.attackTick = 20;
-                if(!entitylivingbase.hasPassenger(attacker)) {
-                    this.attacker.doHurtTarget(entitylivingbase);
-                }
+//                if(!entitylivingbase.hasPassenger(attacker)) {
+//                    this.attacker.doHurtTarget(entitylivingbase);
+//                }
             }
 
             // If the entity is not grabbing a target, set it to move to its target
@@ -224,7 +226,7 @@ public class GrayTabbyCat extends Cat {
             // the target's height is less than 3 blocks
             if(distanceToTarget <= reachToTarget && attacker.getPassengers().isEmpty() && entitylivingbase.getBbHeight() <= 3 && this.attackTick == 15) {
                 // Move the entity upwards to avoid being stuck in the ground
-                 this.attacker.moveTo(this.attacker.getX(), this.attacker.getY() + entitylivingbase.getBbHeight() + 40,
+                 this.attacker.moveTo(this.attacker.getX(), this.attacker.getY() + entitylivingbase.getBbHeight() + 15,
                         this.attacker.getZ(), this.attacker.getYRot(), this.attacker.getXRot());
                 // Grab the target
                 entitylivingbase.startRiding(this.attacker, true);
