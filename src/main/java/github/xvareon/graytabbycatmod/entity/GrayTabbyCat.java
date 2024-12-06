@@ -217,9 +217,9 @@ public class GrayTabbyCat extends Cat {
 
             // If the entity is not grabbing a target, set it to move to its target
             if(attacker.getPassengers().isEmpty()) {
-                this.attacker.navigation.moveTo(this.attacker.navigation.createPath(entitylivingbase.blockPosition(), 0), 1.0D);
+                this.attacker.navigation.moveTo(this.attacker.navigation.createPath(entitylivingbase.blockPosition(), 0), 2.0D);
             } else { // If the entity is grabbing a target, set it to move upwards
-                this.attacker.navigation.moveTo(this.attacker.navigation.createPath(new BlockPos((int) targetX, (int) this.liftY + 15, (int) targetZ), 0), 1.0D);
+                this.attacker.navigation.moveTo(this.attacker.navigation.createPath(new BlockPos((int) targetX, (int) this.liftY + 15, (int) targetZ), 0), 0.4D);
             }
 
             // If the entity is in range and entity is not grabbing a target and
@@ -242,7 +242,7 @@ public class GrayTabbyCat extends Cat {
                     target.setNoAi(true);
                 }
                 // Move upwards
-                this.attacker.navigation.moveTo(this.attacker.navigation.createPath(new BlockPos((int) targetX, (int) this.liftY + 15, (int) targetZ), 0), 1.0D);
+                this.attacker.navigation.moveTo(this.attacker.navigation.createPath(new BlockPos((int) targetX, (int) this.liftY + 15, (int) targetZ), 0), 0.4D);
             }
 
             // If the entity is grabbing a target and the block above is solid
@@ -261,7 +261,7 @@ public class GrayTabbyCat extends Cat {
                 BlockPos pos = this.attacker.blockPosition();
                 rPos = rPos.offset(pos);
                 // Move to random target position
-                this.attacker.navigation.moveTo(this.attacker.navigation.createPath(rPos, 0), 1.0D);
+                this.attacker.navigation.moveTo(this.attacker.navigation.createPath(rPos, 0), 2.0D);
             }
 
             // If we've about reached the target lifting point and have a target

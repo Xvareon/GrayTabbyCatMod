@@ -59,3 +59,8 @@ https://www.youtube.com/watch?v=334wakLzQFY
 
 For more details update more often refer to the Forge Forums:
 http://www.minecraftforge.net/forum/index.php/topic,14048.0.html
+
+To export your jar file:
+- Modify your gradle.properties to suit the jar file's name and version.
+- Go to gradle: Tasks->build->build.
+- The jar file should be located in your build->libs
