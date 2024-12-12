@@ -1,6 +1,8 @@
 package github.xvareon.graytabbycatmod.block;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -40,5 +42,19 @@ public class GlowingObsidianBlock extends Block {
     @Override
     public BlockPathTypes getAdjacentBlockPathType(BlockState state, BlockGetter level, BlockPos pos, Mob mob, BlockPathTypes originalType) {
         return BlockPathTypes.DANGER_FIRE;
+    }
+
+    public void animateTick(BlockState stateIn, Level worldIn, BlockPos pos, RandomSource rand) {
+        super.animateTick(stateIn, worldIn, pos, rand);
+
+        if(rand.nextInt(5) == 0 && worldIn.getBlockState(pos.above()).isAir()){
+            worldIn.addParticle(ParticleTypes.FLAME,
+                    pos.getX() + 0.4 + rand.nextDouble() * 0.2,
+                    pos.getY() + 0.5 + rand.nextDouble() * 0.1,
+                    pos.getZ() + 0.4 + rand.nextDouble() * 0.2,
+                    (Math.random() - 0.5) * 0.08,
+                    (1 + Math.random()) * 0.04,
+                    (Math.random() - 0.5) * 0.08);
+        }
     }
 }
