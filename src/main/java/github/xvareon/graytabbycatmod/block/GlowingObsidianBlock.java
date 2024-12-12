@@ -4,17 +4,20 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ConcretePowderBlock;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.Level;
@@ -85,7 +88,6 @@ public class GlowingObsidianBlock extends ConcretePowderBlock {
         if (touchesLiquid(level, pos)) {
             turnIntoObsidian(level, pos);
         }
-        // else super.tick(this.defaultBlockState(), level, pos, random);
     }
 
     @Override
@@ -139,5 +141,36 @@ public class GlowingObsidianBlock extends ConcretePowderBlock {
 
     private boolean isWater(BlockState state) {
         return state.getFluidState().is(FluidTags.WATER);
+    }
+
+    public void spawnDissolveParticles(Level level, BlockPos pos) {
+        int d = 0, e = 0, f = 0;
+
+        int amount = 4;
+        for (int ax = 0; ax < amount; ++ax) {
+            for (int ay = 0; ay < amount; ++ay) {
+                for (int az = 0; az < amount; ++az) {
+                    double s = (ax + 0.2) / amount;
+                    double t = (ay + 0.2) / amount;
+                    double u = (az + 0.2) / amount;
+                    double px = s + d;
+                    double py = t + e;
+                    double pz = u + f;
+                    level.addParticle(ParticleTypes.FLAME,
+                            pos.getX() + px, pos.getY() + py, pos.getZ() + pz,
+                            s - 0.5, 0, u - 0.5);
+                }
+            }
+        }
+
+    }
+
+    @Override
+    protected void spawnDestroyParticles(Level level, Player player, BlockPos pos, BlockState state) {
+        if (level.isClientSide) {
+            spawnDissolveParticles(level, pos);
+        }
+        SoundType soundtype = state.getSoundType();
+        level.playSound(null, pos, soundtype.getBreakSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
     }
 }
