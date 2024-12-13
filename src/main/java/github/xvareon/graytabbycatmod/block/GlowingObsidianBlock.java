@@ -4,17 +4,26 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ConcretePowderBlock;
 import net.minecraft.world.level.block.SoundType;
@@ -23,6 +32,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 
 public class GlowingObsidianBlock extends ConcretePowderBlock {
 
@@ -172,5 +183,54 @@ public class GlowingObsidianBlock extends ConcretePowderBlock {
         }
         SoundType soundtype = state.getSoundType();
         level.playSound(null, pos, soundtype.getBreakSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
+    }
+
+    private void fillBucket(Player player, int startIndex) {
+        Inventory inv = player.getInventory();
+        for(int i = startIndex; i < inv.getContainerSize(); i++) {
+            ItemStack stackInSlot = inv.getItem(i);
+            if(stackInSlot.getItem() == Items.BUCKET) {
+                stackInSlot.shrink(1);
+                ItemStack give = new ItemStack(Items.LAVA_BUCKET);
+                if(!player.addItem(give)){
+                    player.drop(give, false);
+                }
+                return;
+            }
+        }
+    }
+
+    @Override
+    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult raytrace) {
+
+        ItemStack stack = player.getItemInHand(hand);
+
+        if(stack.getItem() == Items.BUCKET) {
+            fillBucket(player, player.getInventory().selected);
+            world.removeBlock(pos, false);
+            return InteractionResult.sidedSuccess(world.isClientSide);
+        }
+
+        if(stack.getItem() instanceof BlockItem bitem) {
+            Block block = bitem.getBlock();
+
+            UseOnContext context = new UseOnContext(player, hand, new BlockHitResult(new Vec3(0.5F, 1F, 0.5F), raytrace.getDirection(), pos, false));
+            BlockPlaceContext bcontext = new BlockPlaceContext(context);
+
+            BlockState stateToPlace = block.getStateForPlacement(bcontext);
+            if(stateToPlace != null && stateToPlace.canSurvive(world, pos)) {
+                world.setBlockAndUpdate(pos, stateToPlace);
+                world.playSound(player, pos, SoundEvents.BUCKET_FILL_LAVA, SoundSource.PLAYERS, 1.0F, 1.0F);
+
+                if(!player.getAbilities().instabuild) {
+                    stack.shrink(1);
+                    fillBucket(player, 0);
+                }
+
+                return InteractionResult.sidedSuccess(world.isClientSide);
+            }
+        }
+
+        return InteractionResult.PASS;
     }
 }
