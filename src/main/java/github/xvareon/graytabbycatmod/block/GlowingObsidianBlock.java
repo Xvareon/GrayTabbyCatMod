@@ -207,28 +207,10 @@ public class GlowingObsidianBlock extends ConcretePowderBlock {
 
         if(stack.getItem() == Items.BUCKET) {
             fillBucket(player, player.getInventory().selected);
+            world.playSound(player, pos, SoundEvents.BUCKET_FILL_LAVA, SoundSource.PLAYERS, 1.0F, 1.0F);
             world.removeBlock(pos, false);
+            world.setBlockAndUpdate(pos, Blocks.BASALT.defaultBlockState());
             return InteractionResult.sidedSuccess(world.isClientSide);
-        }
-
-        if(stack.getItem() instanceof BlockItem bitem) {
-            Block block = bitem.getBlock();
-
-            UseOnContext context = new UseOnContext(player, hand, new BlockHitResult(new Vec3(0.5F, 1F, 0.5F), raytrace.getDirection(), pos, false));
-            BlockPlaceContext bcontext = new BlockPlaceContext(context);
-
-            BlockState stateToPlace = block.getStateForPlacement(bcontext);
-            if(stateToPlace != null && stateToPlace.canSurvive(world, pos)) {
-                world.setBlockAndUpdate(pos, stateToPlace);
-                world.playSound(player, pos, SoundEvents.BUCKET_FILL_LAVA, SoundSource.PLAYERS, 1.0F, 1.0F);
-
-                if(!player.getAbilities().instabuild) {
-                    stack.shrink(1);
-                    fillBucket(player, 0);
-                }
-
-                return InteractionResult.sidedSuccess(world.isClientSide);
-            }
         }
 
         return InteractionResult.PASS;
