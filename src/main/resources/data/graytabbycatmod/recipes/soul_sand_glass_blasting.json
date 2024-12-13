@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:blasting",
+  "experience": 0,
+  "cookingtime": 100,
+  "ingredient": {
+    "item": "minecraft:soul_sand"
+  },
+  "result": "graytabbycatmod:soul_sand_glass"
+}

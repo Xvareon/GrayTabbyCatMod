@@ -48,9 +48,13 @@ public class CreativeTabInit {
         if(event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS) {
             event.getEntries().putAfter(Items.ACACIA_LOG.getDefaultInstance(), ItemInit.GLOWING_OBSIDIAN.get().getDefaultInstance(), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
         }
+        if(event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS) {
+            event.getEntries().putAfter(Items.ACACIA_LOG.getDefaultInstance(), ItemInit.SOUL_SAND_GLASS.get().getDefaultInstance(), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
+        }
 
         if(event.getTab() == GRAY_TABBY_CAT_TAB.get()) {
             event.accept(ItemInit.GLOWING_OBSIDIAN.get());
+            event.accept(ItemInit.SOUL_SAND_GLASS.get());
         }
     }
 }

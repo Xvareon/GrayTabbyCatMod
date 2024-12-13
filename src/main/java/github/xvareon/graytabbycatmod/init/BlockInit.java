@@ -2,6 +2,7 @@ package github.xvareon.graytabbycatmod.init;
 
 import github.xvareon.graytabbycatmod.GrayTabbyCatMod;
 import github.xvareon.graytabbycatmod.block.GlowingObsidianBlock;
+import github.xvareon.graytabbycatmod.block.SoulSandGlassBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -23,5 +24,11 @@ public class BlockInit {
                     .lightLevel(state -> 10)
                     .requiresCorrectToolForDrops()
                     .pushReaction(PushReaction.BLOCK)
+            ));
+
+    public static final RegistryObject<Block> SOUL_SAND_GLASS = BLOCKS.register("soul_sand_glass",
+            () -> new SoulSandGlassBlock(BlockBehaviour.Properties.copy(Blocks.GLASS)
+                    .mapColor(MapColor.COLOR_BROWN)
+                    .instrument(NoteBlockInstrument.FLUTE)
             ));
 }

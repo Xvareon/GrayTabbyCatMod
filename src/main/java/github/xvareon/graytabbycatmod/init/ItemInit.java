@@ -18,4 +18,7 @@ public class ItemInit {
     public static final RegistryObject<BlockItem> GLOWING_OBSIDIAN = ITEMS.register("glowing_obsidian",
             () -> new BlockItem(BlockInit.GLOWING_OBSIDIAN.get(), new Item.Properties().rarity(Rarity.UNCOMMON)
                     ));
+    public static final RegistryObject<BlockItem> SOUL_SAND_GLASS = ITEMS.register("soul_sand_glass",
+            () -> new BlockItem(BlockInit.SOUL_SAND_GLASS.get(), new Item.Properties().rarity(Rarity.UNCOMMON)
+            ));
 }
