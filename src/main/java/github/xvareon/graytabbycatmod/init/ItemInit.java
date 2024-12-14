@@ -2,6 +2,7 @@ package github.xvareon.graytabbycatmod.init;
 
 import github.xvareon.graytabbycatmod.GrayTabbyCatMod;
 import github.xvareon.graytabbycatmod.item.DragonFireball;
+import github.xvareon.graytabbycatmod.item.LightningCharge;
 import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.minecraft.world.item.*;
 import net.minecraftforge.registries.RegistryObject;
@@ -25,4 +26,7 @@ public class ItemInit {
 
     public static final RegistryObject<Item> DRAGON_FIREBALL = ITEMS.register("dragon_fireball",
             () -> new DragonFireball(new Item.Properties().rarity(Rarity.EPIC)));
+
+    public static final RegistryObject<Item> LIGHTNING_CHARGE = ITEMS.register("lightning_charge",
+            () -> new LightningCharge(new Item.Properties().rarity(Rarity.UNCOMMON)));
 }

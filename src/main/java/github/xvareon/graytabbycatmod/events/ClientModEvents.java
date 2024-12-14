@@ -17,5 +17,6 @@ public class ClientModEvents {
     public static void registerRenderer(EntityRenderersEvent.RegisterRenderers event){
         event.registerEntityRenderer(EntityInit.GRAY_TABBY_CAT.get(), GrayTabbyCatRenderer::new);
         event.registerEntityRenderer(EntityInit.DRAGON_FIREBALL.get(), ThrownItemRenderer::new);
+        event.registerEntityRenderer(EntityInit.LIGHTNING_CHARGE.get(), ThrownItemRenderer::new);
     }
 }
