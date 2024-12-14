@@ -4,5 +4,6 @@
   "entity.graytabbycatmod.gray_tabby_cat": "Gray Tabby Cat",
   "block.graytabbycatmod.glowing_obsidian": "Glowing Obsidian",
   "block.graytabbycatmod.soul_sand_glass": "Soul Sand Glass",
-  "entity.graytabbycatmod.dragon_fireball": "Dragon Fireball"
+  "entity.graytabbycatmod.dragon_fireball": "Dragon Fireball",
+  "item.graytabbycatmod.dragon_fireball": "Dragon Fireball"
 }
