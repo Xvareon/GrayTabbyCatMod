@@ -1,6 +1,7 @@
 package github.xvareon.graytabbycatmod.init;
 
 import github.xvareon.graytabbycatmod.GrayTabbyCatMod;
+import github.xvareon.graytabbycatmod.entity.DragonFireball;
 import github.xvareon.graytabbycatmod.entity.GrayTabbyCat;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
@@ -15,5 +16,11 @@ public class EntityInit {
             () -> EntityType.Builder.<GrayTabbyCat>of(GrayTabbyCat::new, MobCategory.CREATURE)
                     .sized(1.0f, 1.0f)
                     .build(new ResourceLocation(GrayTabbyCatMod.MODID, "gray_tabby_cat").toString())
+    );
+
+    public static final RegistryObject<EntityType<DragonFireball>> DRAGON_FIREBALL = ENTITIES.register("dragon_fireball",
+            () -> EntityType.Builder.<DragonFireball>of(DragonFireball::new, MobCategory.MISC)
+                    .sized(0.5f, 0.5f)
+                    .build(new ResourceLocation(GrayTabbyCatMod.MODID, "dragon_fireball").toString())
     );
 }

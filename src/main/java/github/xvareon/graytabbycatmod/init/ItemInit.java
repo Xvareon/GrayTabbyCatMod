@@ -1,6 +1,7 @@
 package github.xvareon.graytabbycatmod.init;
 
 import github.xvareon.graytabbycatmod.GrayTabbyCatMod;
+import github.xvareon.graytabbycatmod.item.DragonFireballItem;
 import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.minecraft.world.item.*;
 import net.minecraftforge.registries.RegistryObject;
@@ -21,4 +22,7 @@ public class ItemInit {
     public static final RegistryObject<BlockItem> SOUL_SAND_GLASS = ITEMS.register("soul_sand_glass",
             () -> new BlockItem(BlockInit.SOUL_SAND_GLASS.get(), new Item.Properties().rarity(Rarity.UNCOMMON)
             ));
+
+    public static final RegistryObject<Item> DRAGON_FIREBALL = ITEMS.register("dragon_fireball",
+            () -> new DragonFireballItem(new Item.Properties()));
 }
