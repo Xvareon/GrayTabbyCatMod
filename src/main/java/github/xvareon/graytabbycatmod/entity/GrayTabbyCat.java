@@ -210,9 +210,6 @@ public class GrayTabbyCat extends Cat {
             // the timer and attack if the entity is not grabbed
             if(distanceToTarget <= reachToTarget && this.attackTick <= 0) {
                 this.attackTick = 20;
-//                if(!entitylivingbase.hasPassenger(attacker)) {
-//                    this.attacker.doHurtTarget(entitylivingbase);
-//                }
             }
 
             // If the entity is not grabbing a target, set it to move to its target
@@ -222,8 +219,7 @@ public class GrayTabbyCat extends Cat {
                 this.attacker.navigation.moveTo(this.attacker.navigation.createPath(new BlockPos((int) targetX, (int) this.liftY + 15, (int) targetZ), 0), 0.4D);
             }
 
-            // If the entity is in range and entity is not grabbing a target and
-            // the target's height is less than 3 blocks
+            // If the entity can grab the target
             if(distanceToTarget <= reachToTarget && attacker.getPassengers().isEmpty() && entitylivingbase.getBbHeight() <= 3 && this.attackTick == 15) {
                 // Move the entity upwards to avoid being stuck in the ground
                  this.attacker.moveTo(this.attacker.getX(), this.attacker.getY() + entitylivingbase.getBbHeight() + 15,
@@ -232,8 +228,6 @@ public class GrayTabbyCat extends Cat {
                 entitylivingbase.startRiding(this.attacker, true);
                 // Set liftY so entity can continue moving up from the spot
                 this.liftY = entitylivingbase.getY();
-                // Remove targets of the entity (to avoid something stupid like
-                // a skeleton shooting while being eaten by a bird)
                 if(entitylivingbase instanceof Mob) {
                     Mob target = (Mob) entitylivingbase;
                     target.setTarget(null);
@@ -246,7 +240,6 @@ public class GrayTabbyCat extends Cat {
             }
 
             // If the entity is grabbing a target and the block above is solid
-            // (stuck)
             if(attacker.getPassengers().isEmpty() && this.attacker.getCommandSenderWorld().getBlockState(this.attacker.blockPosition().above()).isRedstoneConductor(world, this.attacker.blockPosition().above())) {
                 // Release target
                 entitylivingbase.stopRiding();
