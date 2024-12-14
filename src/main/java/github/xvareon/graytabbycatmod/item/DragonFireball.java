@@ -21,10 +21,10 @@ public class DragonFireball extends Item {
                 SoundEvents.FIRECHARGE_USE, SoundSource.NEUTRAL, 0.5F, 0.4F / (pLevel.getRandom().nextFloat() * 0.4F + 0.8F));
 
         if (!pLevel.isClientSide) {
-            github.xvareon.graytabbycatmod.entity.DragonFireball dice = new github.xvareon.graytabbycatmod.entity.DragonFireball(pLevel, pPlayer);
-            dice.setItem(itemstack);
-            dice.shootFromRotation(pPlayer, pPlayer.getXRot(), pPlayer.getYRot(), 0.0F, 1.5F, 1.0F);
-            pLevel.addFreshEntity(dice);
+            github.xvareon.graytabbycatmod.entity.DragonFireball dragonFireball = new github.xvareon.graytabbycatmod.entity.DragonFireball(pLevel, pPlayer);
+            dragonFireball.setItem(itemstack);
+            dragonFireball.shootFromRotation(pPlayer, pPlayer.getXRot(), pPlayer.getYRot(), 0.0F, 1.5F, 1.0F);
+            pLevel.addFreshEntity(dragonFireball);
         }
 
         pPlayer.awardStat(Stats.ITEM_USED.get(this));
