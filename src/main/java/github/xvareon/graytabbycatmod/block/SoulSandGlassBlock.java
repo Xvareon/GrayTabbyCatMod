@@ -15,9 +15,13 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.BubbleColumnBlock;
 import net.minecraft.world.level.block.ScaffoldingBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.NotNull;
@@ -41,6 +45,12 @@ public class SoulSandGlassBlock extends ScaffoldingBlock {
         if (!(entity instanceof Player)) {
             entity.setPos(entity.xOld, entity.yOld, entity.zOld); // Push non-player entities back
         }
+        if (isSourceWaterAbove(level, pos)) {
+            entity.setDeltaMovement(entity.getDeltaMovement().add(0.0, 0.3, 0.0)); // Propel the entity upward
+            if (entity instanceof Player player) {
+                player.setAirSupply(player.getMaxAirSupply()); // Reset the air supply to the maximum
+            }
+        }
         if (level.isClientSide) {
             boolean bl = entity.xOld != entity.getX() || entity.zOld != entity.getZ();
             RandomSource random = level.getRandom();
@@ -54,8 +64,18 @@ public class SoulSandGlassBlock extends ScaffoldingBlock {
     @Override
     public void stepOn(Level level, BlockPos blockPos, BlockState blockState, Entity entity) {
         if (!entity.isSteppingCarefully() && entity instanceof LivingEntity && !EnchantmentHelper.hasFrostWalker((LivingEntity) entity)) {
+
             double soulSandSlowFactor = 0.2;
             entity.setDeltaMovement(entity.getDeltaMovement().multiply(soulSandSlowFactor, 1.0, soulSandSlowFactor));
+
+
+            if (isSourceWaterAbove(level, blockPos)) {
+                entity.setDeltaMovement(entity.getDeltaMovement().add(0.0, 0.3, 0.0)); // Propel the entity upward
+                if (entity instanceof Player player) {
+                    player.setAirSupply(player.getMaxAirSupply()); // Reset the air supply to the maximum
+                }
+            }
+
             if (level.isClientSide) {
                 boolean bl = entity.xOld != entity.getX() || entity.zOld != entity.getZ();
                 RandomSource random = level.getRandom();
@@ -73,7 +93,15 @@ public class SoulSandGlassBlock extends ScaffoldingBlock {
     }
 
     @Override
-    public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) { }
+    public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
+        BlockPos currentPos = pos.above();
+        BlockState currentState = level.getBlockState(currentPos);
+
+        if (isSourceWaterAbove(level, pos) &&
+                (!currentState.isSolid())) {
+            level.setBlock(currentPos, Blocks.BUBBLE_COLUMN.defaultBlockState().setValue(BubbleColumnBlock.DRAG_DOWN, false), 3);
+        }
+    }
 
     @Override
     public @NotNull InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
@@ -82,5 +110,10 @@ public class SoulSandGlassBlock extends ScaffoldingBlock {
 
     public boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
         return true;
+    }
+
+    private boolean isSourceWaterAbove(Level level, BlockPos pos) {
+        FluidState aboveFluidState = level.getFluidState(pos.above());
+        return aboveFluidState.getType() == Fluids.WATER && aboveFluidState.isSource();
     }
 }
