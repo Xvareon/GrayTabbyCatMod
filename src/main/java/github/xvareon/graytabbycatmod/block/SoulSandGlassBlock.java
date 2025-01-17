@@ -50,7 +50,7 @@ public class SoulSandGlassBlock extends ScaffoldingBlock {
         }
     }
 
-    // Slow Entities
+    // Slow Entities when they step on the block
     @Override
     public void stepOn(Level level, BlockPos blockPos, BlockState blockState, Entity entity) {
         if (!entity.isSteppingCarefully() && entity instanceof LivingEntity && !EnchantmentHelper.hasFrostWalker((LivingEntity) entity)) {
