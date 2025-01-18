@@ -1,5 +1,6 @@
 package github.xvareon.graytabbycatmod.block;
 
+import github.xvareon.graytabbycatmod.init.BlockInit;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
@@ -24,6 +25,7 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 public class SoulSandGlassBlock extends ScaffoldingBlock {
@@ -41,6 +43,11 @@ public class SoulSandGlassBlock extends ScaffoldingBlock {
         if (entity instanceof LivingEntity livingEntity && !EnchantmentHelper.hasSoulSpeed(livingEntity)) {
             double soulSandSlowFactor = 0.2;
             entity.setDeltaMovement(entity.getDeltaMovement().multiply(soulSandSlowFactor, 1.0, soulSandSlowFactor));
+            if (entity.getBoundingBox().maxY <= pos.getY() + 0.0625D && !(level.getBlockState(pos.below()).is(BlockInit.SOUL_SAND_GLASS.get()))) {
+                if (!entity.isShiftKeyDown()) {
+                    entity.makeStuckInBlock(state, new Vec3(1.0D, 0.0F, 1.0D));
+                }
+            }
         }
         if (!(entity instanceof Player)) {
             entity.setPos(entity.xOld, entity.yOld, entity.zOld); // Push non-player entities back
