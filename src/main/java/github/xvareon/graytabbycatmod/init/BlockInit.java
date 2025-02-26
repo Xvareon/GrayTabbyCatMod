@@ -24,6 +24,7 @@ public class BlockInit {
                     .lightLevel(state -> 10)
                     .requiresCorrectToolForDrops()
                     .pushReaction(PushReaction.BLOCK)
+                    .emissiveRendering((state, getter, pos) -> true)
             ));
 
     public static final RegistryObject<Block> SOUL_SAND_GLASS = BLOCKS.register("soul_sand_glass",
