@@ -57,6 +57,9 @@ public class CreativeTabInit {
         if(event.getTabKey() == CreativeModeTabs.COMBAT) {
             event.getEntries().putAfter(Items.SHIELD.getDefaultInstance(), ItemInit.LIGHTNING_CHARGE.get().getDefaultInstance(), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
         }
+        if(event.getTabKey() == CreativeModeTabs.SPAWN_EGGS) {
+            event.getEntries().putAfter(Items.SQUID_SPAWN_EGG.getDefaultInstance(), ItemInit.BARNACLE_SPAWN_EGG.get().getDefaultInstance(), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
+        }
 
         if(event.getTab() == GRAY_TABBY_CAT_TAB.get()) {
             event.accept(ItemInit.GLOWING_OBSIDIAN.get());

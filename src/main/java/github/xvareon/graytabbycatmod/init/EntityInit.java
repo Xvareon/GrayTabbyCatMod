@@ -1,6 +1,7 @@
 package github.xvareon.graytabbycatmod.init;
 
 import github.xvareon.graytabbycatmod.GrayTabbyCatMod;
+import github.xvareon.graytabbycatmod.entity.Barnacle;
 import github.xvareon.graytabbycatmod.entity.DragonFireball;
 import github.xvareon.graytabbycatmod.entity.GrayTabbyCat;
 import github.xvareon.graytabbycatmod.entity.LightningCharge;
@@ -29,5 +30,11 @@ public class EntityInit {
             () -> EntityType.Builder.<LightningCharge>of(LightningCharge::new, MobCategory.MISC)
                     .sized(0.5f, 0.5f)
                     .build(new ResourceLocation(GrayTabbyCatMod.MODID, "lightning_charge").toString())
+    );
+
+    public static final RegistryObject<EntityType<Barnacle>> BARNACLE = ENTITIES.register("barnacle",
+            () -> EntityType.Builder.<Barnacle>of(Barnacle::new, MobCategory.MONSTER)
+                    .sized(1.0f, 1.0f)
+                    .build(new ResourceLocation(GrayTabbyCatMod.MODID, "barnacle").toString())
     );
 }

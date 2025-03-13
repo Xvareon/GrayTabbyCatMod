@@ -29,4 +29,7 @@ public class ItemInit {
 
     public static final RegistryObject<Item> LIGHTNING_CHARGE = ITEMS.register("lightning_charge",
             () -> new LightningCharge(new Item.Properties().rarity(Rarity.UNCOMMON)));
+
+    public static final RegistryObject<ForgeSpawnEggItem> BARNACLE_SPAWN_EGG = addToTab(ITEMS.register("barnacle_spawn_egg",
+            () -> new ForgeSpawnEggItem(EntityInit.BARNACLE, 0x746d67, 0x413b37, new Item.Properties())));
 }
