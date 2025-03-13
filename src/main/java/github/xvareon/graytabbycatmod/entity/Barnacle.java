@@ -10,10 +10,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.AnimationState;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -41,9 +38,13 @@ public class Barnacle extends Squid {
     protected static final ImmutableList<MemoryModuleType<?>> MEMORY_TYPES = ImmutableList.of(MemoryModuleType.HURT_BY, MemoryModuleType.HURT_BY_ENTITY, MemoryModuleType.NEAREST_ATTACKABLE, MemoryModuleType.NEAREST_LIVING_ENTITIES, MemoryModuleType.NEAREST_VISIBLE_LIVING_ENTITIES);
     private static final EntityDataAccessor<Integer> LOOK_TARGET = SynchedEntityData.defineId(Barnacle.class, EntityDataSerializers.INT);
     public static final float ATTACK_REACH_SQR = 36;
+    public float sizeMultiplier = 0.75f;
 
     public Barnacle(EntityType<? extends Squid> entityType, Level level) {
+
         super(entityType, level);
+        this.sizeMultiplier = this.sizeMultiplier + random.nextFloat() * 9.25f; // Random sizing
+        this.refreshDimensions(); // Update hitbox
     }
 
     @NotNull
@@ -200,5 +201,20 @@ public class Barnacle extends Squid {
 
     public static boolean canSpawn(EntityType<Barnacle> entityType, LevelAccessor level, MobSpawnType spawnType, BlockPos position, RandomSource random) {
         return Barnacle.checkSurfaceWaterAnimalSpawnRules(entityType, level, spawnType, position, random);
+    }
+
+    @Override
+    public EntityDimensions getDimensions(Pose pose) {
+        return super.getDimensions(pose).scale(sizeMultiplier);
+    }
+
+    @Override
+    public void onAddedToWorld() {
+        super.onAddedToWorld();
+        this.refreshDimensions(); // Ensure hitbox updates
+    }
+
+    public float getSizeMultiplier() {
+        return sizeMultiplier;
     }
 }

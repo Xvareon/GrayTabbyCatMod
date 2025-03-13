@@ -24,8 +24,9 @@ public class BarnacleRenderer extends MobRenderer<Barnacle, BarnacleModel<Barnac
     }
 
     @Override
-    protected void scale(@NotNull Barnacle entity, @NotNull PoseStack poseStack, float $$2) {
-        poseStack.scale(1.5f, 1.5f, 1.5f);
+    protected void scale(@NotNull Barnacle entity, @NotNull PoseStack poseStack, float partialTickTime) {
+        float scale = entity.getSizeMultiplier(); // Get the random scale
+        poseStack.scale(scale, scale, scale); // Apply scaling to the model
     }
 
     @Override
