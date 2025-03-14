@@ -1,3 +1,6 @@
 {
-  "parent": "graytabbycatmod:block/glowing_obsidian"
+  "parent": "graytabbycatmod:block/glowing_obsidian",
+  "textures": {
+    "layer0": "graytabbycatmod:item/glowing_obsidian"
+  }
 }
