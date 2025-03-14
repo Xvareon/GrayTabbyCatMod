@@ -44,7 +44,7 @@ public class Barnacle extends Squid {
 
         super(entityType, level);
 
-        this.sizeMultiplier = this.sizeMultiplier + random.nextFloat() * 9.25f; // Random sizing
+        this.sizeMultiplier = 0.75f + random.nextFloat() * 9.25f; // Random sizing
         this.refreshDimensions(); // Update hitbox
 
         // Scale attributes
