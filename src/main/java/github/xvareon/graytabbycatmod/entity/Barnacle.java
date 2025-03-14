@@ -31,7 +31,6 @@ public class Barnacle extends Squid {
     public final AnimationState hurtAnimationState = new AnimationState();
     public final AnimationState swimAnimationState = new AnimationState();
     public boolean animating = false;
-    public boolean swim = false;
     public int animateTicks = 0;
     public Entity lookTarget = null;
     protected static final ImmutableList<SensorType<? extends Sensor<? super Barnacle>>> SENSOR_TYPES = ImmutableList.of(SensorType.NEAREST_LIVING_ENTITIES, SensorType.HURT_BY);
@@ -40,19 +39,27 @@ public class Barnacle extends Squid {
     public static final float ATTACK_REACH_SQR = 36;
     public float sizeMultiplier;
 
+    private static final EntityDataAccessor<Integer> VARIANT = SynchedEntityData.defineId(Barnacle.class, EntityDataSerializers.INT);
+
     public Barnacle(EntityType<? extends Squid> entityType, Level level) {
 
         super(entityType, level);
 
-        this.sizeMultiplier = 0.75f + random.nextFloat() * 9.25f; // Random sizing
+        float[] possibleSizes = {0.75f, 1.0f, 3.0f, 6.0f, 10.0f, 12.0f};
+        this.sizeMultiplier = possibleSizes[random.nextInt(possibleSizes.length)];
         this.refreshDimensions(); // Update hitbox
 
         // Scale attributes
-        this.getAttribute(Attributes.MAX_HEALTH).setBaseValue((30.0) * (sizeMultiplier/2));
-        this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue((6.0) * (sizeMultiplier/2));
+        this.getAttribute(Attributes.MAX_HEALTH).setBaseValue((30.0) * (sizeMultiplier * 0.5));
+        this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue((6.0) * (sizeMultiplier * 0.5));
 
         // Ensure health is set to max after modifying
         this.setHealth(this.getMaxHealth());
+
+        // Assign a random color variant
+        if (!level.isClientSide) {
+            setVariant(BarnacleVariant.getRandomVariant(random));
+        }
     }
 
     @NotNull
@@ -81,6 +88,15 @@ public class Barnacle extends Squid {
     protected void defineSynchedData() {
         super.defineSynchedData();
         entityData.define(LOOK_TARGET, -1);
+        entityData.define(VARIANT, BarnacleVariant.DEFAULT.ordinal()); // Default to BLUE
+    }
+
+    public BarnacleVariant getVariant() {
+        return BarnacleVariant.byId(entityData.get(VARIANT));
+    }
+
+    public void setVariant(BarnacleVariant variant) {
+        entityData.set(VARIANT, variant.getId());
     }
 
     public int getLookTarget() {
@@ -125,16 +141,16 @@ public class Barnacle extends Squid {
 
         if (getBrain().getMemory(MemoryModuleType.NEAREST_ATTACKABLE).isPresent() && Sensor.isEntityAttackable(this, getBrain().getMemory(MemoryModuleType.NEAREST_ATTACKABLE).get()))
             setTarget(getBrain().getMemory(MemoryModuleType.NEAREST_ATTACKABLE).get());
-
         else setTarget(null);
-        lookTarget = level().getEntity(getLookTarget());
+
+        lookTarget = this.level().getEntity(getLookTarget());
 
         if (lookTarget != null) {
             Vec3 pos = lookTarget.position();
             lookAt(EntityAnchorArgument.Anchor.EYES, new Vec3(pos.x, lookTarget.getBoundingBox().getCenter().y, pos.z));
         }
 
-        if (level().isClientSide) return;
+        if (this.level().isClientSide) return;
 
         if (getTarget() == null || (!animating && getTarget().distanceToSqr(this) >= ATTACK_REACH_SQR + 10) || getTarget().distanceToSqr(this) < 1)
             setLookTarget(-1);

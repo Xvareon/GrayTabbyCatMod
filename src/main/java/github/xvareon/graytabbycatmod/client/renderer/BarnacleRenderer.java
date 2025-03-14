@@ -4,14 +4,25 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import github.xvareon.graytabbycatmod.GrayTabbyCatMod;
 import github.xvareon.graytabbycatmod.entity.Barnacle;
+import github.xvareon.graytabbycatmod.entity.BarnacleVariant;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Map;
+
 public class BarnacleRenderer extends MobRenderer<Barnacle, BarnacleModel<Barnacle>> {
-    private static final ResourceLocation BARNACLE_LOCATION = new ResourceLocation(GrayTabbyCatMod.MODID, "textures/entity/barnacle.png");
+    // Map of textures for different barnacle variants
+    private static final Map<BarnacleVariant, ResourceLocation> TEXTURES = Map.of(
+            BarnacleVariant.DEFAULT, new ResourceLocation(GrayTabbyCatMod.MODID, "textures/entity/barnacle.png"),
+            BarnacleVariant.BLUE, new ResourceLocation(GrayTabbyCatMod.MODID, "textures/entity/barnacle_blue.png"),
+            BarnacleVariant.RED, new ResourceLocation(GrayTabbyCatMod.MODID, "textures/entity/barnacle_red.png"),
+            BarnacleVariant.YELLOW, new ResourceLocation(GrayTabbyCatMod.MODID, "textures/entity/barnacle_yellow.png"),
+            BarnacleVariant.WHITE, new ResourceLocation(GrayTabbyCatMod.MODID, "textures/entity/barnacle_white.png"),
+            BarnacleVariant.BLACK, new ResourceLocation(GrayTabbyCatMod.MODID, "textures/entity/barnacle_black.png")
+    );
 
     public BarnacleRenderer(EntityRendererProvider.Context context) {
         super(context, new BarnacleModel<>(context.bakeLayer(BarnacleModel.LAYER_LOCATION)), 0.7F);
@@ -20,7 +31,7 @@ public class BarnacleRenderer extends MobRenderer<Barnacle, BarnacleModel<Barnac
     @NotNull
     @Override
     public ResourceLocation getTextureLocation(@NotNull Barnacle entity) {
-        return BARNACLE_LOCATION;
+        return TEXTURES.getOrDefault(entity.getVariant(), TEXTURES.get(BarnacleVariant.DEFAULT));
     }
 
     @Override
