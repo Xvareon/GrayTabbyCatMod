@@ -38,13 +38,21 @@ public class Barnacle extends Squid {
     protected static final ImmutableList<MemoryModuleType<?>> MEMORY_TYPES = ImmutableList.of(MemoryModuleType.HURT_BY, MemoryModuleType.HURT_BY_ENTITY, MemoryModuleType.NEAREST_ATTACKABLE, MemoryModuleType.NEAREST_LIVING_ENTITIES, MemoryModuleType.NEAREST_VISIBLE_LIVING_ENTITIES);
     private static final EntityDataAccessor<Integer> LOOK_TARGET = SynchedEntityData.defineId(Barnacle.class, EntityDataSerializers.INT);
     public static final float ATTACK_REACH_SQR = 36;
-    public float sizeMultiplier = 0.75f;
+    public float sizeMultiplier;
 
     public Barnacle(EntityType<? extends Squid> entityType, Level level) {
 
         super(entityType, level);
+
         this.sizeMultiplier = this.sizeMultiplier + random.nextFloat() * 9.25f; // Random sizing
         this.refreshDimensions(); // Update hitbox
+
+        // Scale attributes
+        this.getAttribute(Attributes.MAX_HEALTH).setBaseValue((30.0) * (sizeMultiplier/2));
+        this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue((6.0) * (sizeMultiplier/2));
+
+        // Ensure health is set to max after modifying
+        this.setHealth(this.getMaxHealth());
     }
 
     @NotNull
@@ -203,8 +211,9 @@ public class Barnacle extends Squid {
         return Barnacle.checkSurfaceWaterAnimalSpawnRules(entityType, level, spawnType, position, random);
     }
 
+    @NotNull
     @Override
-    public EntityDimensions getDimensions(Pose pose) {
+    public EntityDimensions getDimensions(@NotNull Pose pose) {
         return super.getDimensions(pose).scale(sizeMultiplier);
     }
 
