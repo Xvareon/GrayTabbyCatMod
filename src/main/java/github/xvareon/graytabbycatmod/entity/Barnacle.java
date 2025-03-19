@@ -49,13 +49,6 @@ public class Barnacle extends Squid {
         this.sizeMultiplier = possibleSizes[random.nextInt(possibleSizes.length)];
         this.refreshDimensions(); // Update hitbox
 
-        // Scale attributes
-        this.getAttribute(Attributes.MAX_HEALTH).setBaseValue((30.0) * (getSizeMultiplier() * 0.5f));
-        this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue((6.0) * (getSizeMultiplier() * 0.25f));
-
-        // Ensure health is set to max after modifying
-        this.setHealth(this.getMaxHealth());
-
         // Assign a random color variant
         if (!level.isClientSide) {
             setVariant(BarnacleVariant.getRandomVariant(random));
@@ -65,7 +58,7 @@ public class Barnacle extends Squid {
     @NotNull
     public static AttributeSupplier.Builder createAttributes() {
         return Squid.createAttributes()
-                .add(Attributes.MAX_HEALTH, 30.0)
+                .add(Attributes.MAX_HEALTH, 90.0)
                 .add(Attributes.FOLLOW_RANGE, 16.0)
                 .add(Attributes.ATTACK_SPEED)
                 .add(Attributes.ATTACK_DAMAGE, 6.0);
