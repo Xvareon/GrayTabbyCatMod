@@ -178,11 +178,7 @@ public class Barnacle extends Squid {
         goalSelector.addGoal(2, new LookAtPlayerGoal(this, Player.class, 8.0F));
         targetSelector.addGoal(0, new HurtByTargetGoal(this));
         targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, Player.class, true));
-        targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, WaterAnimal.class, true));
-        targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, AbstractFish.class, true));
-        targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, TropicalFish.class, true));
-        targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, Dolphin.class, true));
-        targetSelector.addGoal(6, new NearestAttackableTargetGoal<>(this, Turtle.class, true));
+        targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, AbstractFish.class, true));
     }
 
     static class OceanDepthsMonsterRandomMovementGoal extends Goal {
