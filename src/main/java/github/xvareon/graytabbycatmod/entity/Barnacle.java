@@ -13,12 +13,10 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
-import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.animal.*;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.phys.Vec3;
@@ -26,7 +24,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumSet;
-import java.util.List;
 import java.util.function.Consumer;
 
 public class Barnacle extends Squid {
@@ -45,7 +42,7 @@ public class Barnacle extends Squid {
 
         super(entityType, level);
 
-        float[] possibleSizes = {0.75f, 1.0f, 3.0f, 6.0f, 10.0f, 12.0f};
+        float[] possibleSizes = {1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 12.0f};
         this.sizeMultiplier = possibleSizes[random.nextInt(possibleSizes.length)];
         this.refreshDimensions(); // Update hitbox
 
@@ -59,7 +56,7 @@ public class Barnacle extends Squid {
     public static AttributeSupplier.Builder createAttributes() {
         return Squid.createAttributes()
                 .add(Attributes.MAX_HEALTH, 90.0)
-                .add(Attributes.FOLLOW_RANGE, 16.0)
+                .add(Attributes.FOLLOW_RANGE, 32.0)
                 .add(Attributes.ATTACK_SPEED)
                 .add(Attributes.ATTACK_DAMAGE, 6.0);
     }
@@ -173,21 +170,19 @@ public class Barnacle extends Squid {
 
     @Override
     protected void registerGoals() {
-        goalSelector.addGoal(0, new BarnacleAttackGoal(this, 60, ATTACK_REACH_SQR, 1, 2, true, false, entity -> {
+        goalSelector.addGoal(0, new BarnacleAttackGoal(this, 60, ATTACK_REACH_SQR, 1, 2, false, entity -> {
             level().broadcastEntityEvent(this, (byte) 64);
             animating = true;
         }));
         goalSelector.addGoal(1, new OceanDepthsMonsterRandomMovementGoal(this));
         goalSelector.addGoal(2, new LookAtPlayerGoal(this, Player.class, 8.0F));
-        goalSelector.addGoal(3, new MeleeAttackGoal(this, 1, true));
         targetSelector.addGoal(0, new HurtByTargetGoal(this));
-        targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, WaterAnimal.class, true));
-        targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, AbstractFish.class, true));
-        targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, TropicalFish.class, true));
-        targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, Dolphin.class, true));
-        targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, Turtle.class, true));
-        targetSelector.addGoal(6, new NearestAttackableTargetGoal<>(this, Player.class, true));
-        targetSelector.addGoal(7, new NearestBoatTargetGoal(this));
+        targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, Player.class, true));
+        targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, WaterAnimal.class, true));
+        targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, AbstractFish.class, true));
+        targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, TropicalFish.class, true));
+        targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, Dolphin.class, true));
+        targetSelector.addGoal(6, new NearestAttackableTargetGoal<>(this, Turtle.class, true));
     }
 
     static class OceanDepthsMonsterRandomMovementGoal extends Goal {
@@ -232,6 +227,10 @@ public class Barnacle extends Squid {
         return this.sizeMultiplier;
     }
 
+    public float getAttackReachDistance() {
+        return 5.0f + (getSizeMultiplier()/2.0f);
+    }
+
     static class BarnacleAttackGoal extends Goal {
         protected final Barnacle mob;
         protected final double speedModifier;
@@ -245,16 +244,14 @@ public class Barnacle extends Squid {
         protected int ticksUntilNextAttack;
         protected int attackInterval;
         protected long lastCanUseCheck;
-        protected boolean wallCheck;
         protected Consumer<LivingEntity> onDamage;
 
-        public BarnacleAttackGoal(Barnacle mob, int attackInterval, double extraReach, double speedModifier, double minDistanceSqr, boolean wallCheck, boolean followTargetEvenIfNotSeen, @Nullable Consumer<LivingEntity> onDamage) {
+        public BarnacleAttackGoal(Barnacle mob, int attackInterval, double extraReach, double speedModifier, double minDistanceSqr, boolean followTargetEvenIfNotSeen, @Nullable Consumer<LivingEntity> onDamage) {
             this.mob = mob;
             this.attackInterval = attackInterval;
             this.extraReach = extraReach;
             this.speedModifier = speedModifier;
             this.minDistanceSqr = minDistanceSqr;
-            this.wallCheck = wallCheck;
             this.followingTargetEvenIfNotSeen = followTargetEvenIfNotSeen;
             this.onDamage = onDamage;
             this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));
@@ -269,7 +266,7 @@ public class Barnacle extends Squid {
                 if (target == null) return false;
                 else if (!target.isAlive()) return false;
                 else
-                    return this.mob.distanceToSqr(target.getX(), target.getY(), target.getZ()) <= mob.getAttribute(Attributes.FOLLOW_RANGE).getValue();
+                    return this.mob.distanceToSqr(target.getX(), target.getY(), target.getZ()) <= (mob.getAttribute(Attributes.FOLLOW_RANGE).getValue() + mob.getAttackReachDistance());
             }
         }
 
@@ -318,7 +315,7 @@ public class Barnacle extends Squid {
 
         protected void checkAndPerformAttack(LivingEntity entity, double distSqr) {
             double attackReachSqr = this.getAttackReachSqr(entity);
-            if (distSqr <= attackReachSqr + extraReach && isTimeToAttack() && (!wallCheck || mob.hasLineOfSight(entity))) {
+            if (distSqr <= attackReachSqr + extraReach && isTimeToAttack() && mob.hasLineOfSight(entity)) {
                 this.resetAttackCooldown();
                 if (onDamage != null) onDamage.accept(entity);
             }
@@ -341,46 +338,7 @@ public class Barnacle extends Squid {
         }
 
         protected double getAttackReachSqr(LivingEntity entity) {
-            return this.mob.getBbWidth() * 2.0F * this.mob.getBbWidth() * 2.0F + entity.getBbWidth();
+            return mob.getAttackReachDistance();
         }
     }
-
-    static class NearestBoatTargetGoal extends Goal {
-        private final Mob mob;
-        private Boat targetBoat;
-
-        public NearestBoatTargetGoal(Mob mob) {
-            this.mob = mob;
-            this.setFlags(EnumSet.of(Flag.TARGET));
-        }
-
-        @Override
-        public boolean canUse() {
-            // Find the nearest boat within a certain range
-            List<Boat> boats = mob.level().getEntitiesOfClass(Boat.class, mob.getBoundingBox().inflate(10.0D));
-
-            if (!boats.isEmpty()) {
-                targetBoat = boats.get(0); // Get the first found boat
-                return true;
-            }
-
-            return false;
-        }
-
-        @Override
-        public void start() {
-            if (targetBoat != null) {
-                mob.setTarget(null); // Ensure it does not switch to another target
-            }
-        }
-
-        @Override
-        public void tick() {
-            if (targetBoat != null && mob.distanceTo(targetBoat) < 2.0D) {
-                // Simulate an attack on the boat (you can modify this logic)
-                targetBoat.hurt(mob.damageSources().mobAttack(mob), 4.0F);
-            }
-        }
-    }
-
 }
