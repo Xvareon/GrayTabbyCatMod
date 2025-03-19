@@ -1,17 +1,14 @@
 package github.xvareon.graytabbycatmod.entity;
 
-import com.google.common.collect.ImmutableList;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.Goal;
@@ -19,9 +16,6 @@ import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
-import net.minecraft.world.entity.ai.memory.MemoryModuleType;
-import net.minecraft.world.entity.ai.sensing.Sensor;
-import net.minecraft.world.entity.ai.sensing.SensorType;
 import net.minecraft.world.entity.animal.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.Boat;
@@ -41,9 +35,6 @@ public class Barnacle extends Squid {
     public final AnimationState swimAnimationState = new AnimationState();
     public boolean animating = false;
     public int animateTicks = 0;
-    public Entity lookTarget = null;
-    protected static final ImmutableList<SensorType<? extends Sensor<? super Barnacle>>> SENSOR_TYPES = ImmutableList.of(SensorType.NEAREST_LIVING_ENTITIES, SensorType.HURT_BY);
-    protected static final ImmutableList<MemoryModuleType<?>> MEMORY_TYPES = ImmutableList.of(MemoryModuleType.HURT_BY, MemoryModuleType.HURT_BY_ENTITY, MemoryModuleType.NEAREST_ATTACKABLE, MemoryModuleType.NEAREST_LIVING_ENTITIES, MemoryModuleType.NEAREST_VISIBLE_LIVING_ENTITIES);
     private static final EntityDataAccessor<Integer> LOOK_TARGET = SynchedEntityData.defineId(Barnacle.class, EntityDataSerializers.INT);
     public static final float ATTACK_REACH_SQR = 36;
     public float sizeMultiplier;
@@ -59,8 +50,8 @@ public class Barnacle extends Squid {
         this.refreshDimensions(); // Update hitbox
 
         // Scale attributes
-        this.getAttribute(Attributes.MAX_HEALTH).setBaseValue((30.0) * (sizeMultiplier * 0.5f));
-        this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue((6.0) * (sizeMultiplier * 0.5f));
+        this.getAttribute(Attributes.MAX_HEALTH).setBaseValue((30.0) * (getSizeMultiplier() * 0.5f));
+        this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue((6.0) * (getSizeMultiplier() * 0.25f));
 
         // Ensure health is set to max after modifying
         this.setHealth(this.getMaxHealth());
@@ -78,19 +69,6 @@ public class Barnacle extends Squid {
                 .add(Attributes.FOLLOW_RANGE, 16.0)
                 .add(Attributes.ATTACK_SPEED)
                 .add(Attributes.ATTACK_DAMAGE, 6.0);
-    }
-
-    @NotNull
-    @Override
-    protected Brain.Provider<Barnacle> brainProvider() {
-        return Brain.provider(MEMORY_TYPES, SENSOR_TYPES);
-    }
-
-    @NotNull
-    @Override
-    @SuppressWarnings("unchecked")
-    public Brain<Barnacle> getBrain() {
-        return (Brain<Barnacle>) super.getBrain();
     }
 
     @Override
@@ -136,46 +114,46 @@ public class Barnacle extends Squid {
     }
 
     @Override
-    protected void customServerAiStep() {
-        level().getProfiler().push("barnacleBrain");
-        getBrain().tick((ServerLevel) level(), this);
-        level().getProfiler().pop();
-        super.customServerAiStep();
-    }
-
-    @Override
     public void aiStep() {
-
         super.aiStep();
 
-        if (getBrain().getMemory(MemoryModuleType.NEAREST_ATTACKABLE).isPresent() && Sensor.isEntityAttackable(this, getBrain().getMemory(MemoryModuleType.NEAREST_ATTACKABLE).get()))
-            setTarget(getBrain().getMemory(MemoryModuleType.NEAREST_ATTACKABLE).get());
-        else setTarget(null);
+        if (getTarget() == null || getTarget().isRemoved() || getTarget().isDeadOrDying()) {
+            setTarget(null);
+        }
 
-        lookTarget = this.level().getEntity(getLookTarget());
-
-        if (lookTarget != null) {
-            Vec3 pos = lookTarget.position();
-            lookAt(EntityAnchorArgument.Anchor.EYES, new Vec3(pos.x, lookTarget.getBoundingBox().getCenter().y, pos.z));
+        if (getTarget() != null) {
+            Vec3 pos = getTarget().position();
+            lookAt(EntityAnchorArgument.Anchor.EYES, new Vec3(pos.x, getTarget().getBoundingBox().getCenter().y, pos.z));
         }
 
         if (this.level().isClientSide) return;
 
-        if (getTarget() == null || (!animating && getTarget().distanceToSqr(this) >= ATTACK_REACH_SQR + 10) || getTarget().distanceToSqr(this) < 1)
-            setLookTarget(-1);
-        else if (animating && getTarget() != null && getTarget().distanceToSqr(this) >= 1)
-            setLookTarget(getTarget().getId());
-        if (!animating) return;
         if (getTarget() != null) {
-            if (animateTicks == 16 && getTarget().isPassenger()) getTarget().stopRiding();
-            if (animateTicks >= 16 && getTarget().distanceToSqr(this) <= ATTACK_REACH_SQR + 10) {
+            double distanceSqr = getTarget().distanceToSqr(this);
+
+            if (!animating && distanceSqr >= ATTACK_REACH_SQR + 10) {
+                setLookTarget(-1);
+            } else if (animating && distanceSqr >= 1) {
+                setLookTarget(getTarget().getId());
+            }
+
+            if (!animating) return;
+
+            if (animateTicks == 16 && getTarget().isPassenger()) {
+                getTarget().stopRiding();
+            }
+
+            if (animateTicks >= 16 && distanceSqr <= ATTACK_REACH_SQR + 10) {
                 Vec3 vec = position().subtract(getTarget().position()).normalize();
                 getTarget().setDeltaMovement(vec.multiply(0.2, 0.2, 0.2));
                 getTarget().hurtMarked = true;
             }
-            if (animateTicks == 38 && getTarget().distanceToSqr(this) <= 9)
+
+            if (animateTicks == 38 && distanceSqr <= 9) {
                 doHurtTarget(getTarget());
+            }
         }
+
         if (++animateTicks >= 40) {
             animating = false;
             animateTicks = 0;
@@ -248,7 +226,7 @@ public class Barnacle extends Squid {
     @NotNull
     @Override
     public EntityDimensions getDimensions(@NotNull Pose pose) {
-        return super.getDimensions(pose).scale(sizeMultiplier);
+        return super.getDimensions(pose).scale(getSizeMultiplier());
     }
 
     @Override
@@ -258,7 +236,7 @@ public class Barnacle extends Squid {
     }
 
     public float getSizeMultiplier() {
-        return sizeMultiplier;
+        return this.sizeMultiplier;
     }
 
     public static class BarnacleAttackGoal extends Goal {
