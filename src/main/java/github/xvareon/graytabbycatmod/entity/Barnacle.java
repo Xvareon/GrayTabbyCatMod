@@ -153,6 +153,10 @@ public class Barnacle extends Squid {
         }
     }
 
+    public static boolean canSpawn(EntityType<Barnacle> entityType, LevelAccessor level, MobSpawnType spawnType, BlockPos position, RandomSource random) {
+        return Barnacle.checkSurfaceWaterAnimalSpawnRules(entityType, level, spawnType, position, random);
+    }
+
     @Override
     public void lookAt(EntityAnchorArgument.Anchor anchor, Vec3 target) {
         Vec3 vec3 = anchor.apply(this);
@@ -186,7 +190,7 @@ public class Barnacle extends Squid {
         targetSelector.addGoal(7, new NearestBoatTargetGoal(this));
     }
 
-    public static class OceanDepthsMonsterRandomMovementGoal extends Goal {
+    static class OceanDepthsMonsterRandomMovementGoal extends Goal {
         private final Squid squid;
 
         public OceanDepthsMonsterRandomMovementGoal(Squid $$0) {
@@ -212,10 +216,6 @@ public class Barnacle extends Squid {
         }
     }
 
-    public static boolean canSpawn(EntityType<Barnacle> entityType, LevelAccessor level, MobSpawnType spawnType, BlockPos position, RandomSource random) {
-        return Barnacle.checkSurfaceWaterAnimalSpawnRules(entityType, level, spawnType, position, random);
-    }
-
     @NotNull
     @Override
     public EntityDimensions getDimensions(@NotNull Pose pose) {
@@ -232,7 +232,7 @@ public class Barnacle extends Squid {
         return this.sizeMultiplier;
     }
 
-    public static class BarnacleAttackGoal extends Goal {
+    static class BarnacleAttackGoal extends Goal {
         protected final Barnacle mob;
         protected final double speedModifier;
         protected double extraReach;
@@ -344,7 +344,8 @@ public class Barnacle extends Squid {
             return this.mob.getBbWidth() * 2.0F * this.mob.getBbWidth() * 2.0F + entity.getBbWidth();
         }
     }
-    public static class NearestBoatTargetGoal extends Goal {
+
+    static class NearestBoatTargetGoal extends Goal {
         private final Mob mob;
         private Boat targetBoat;
 
