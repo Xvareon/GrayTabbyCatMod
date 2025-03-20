@@ -37,10 +37,17 @@ import java.util.EnumSet;
 
 public class GrayTabbyCat extends Cat {
 
+    private static final EntityDataAccessor<Integer> VARIANT = SynchedEntityData.defineId(GrayTabbyCat.class, EntityDataSerializers.INT);
+
     private static final EntityDataAccessor<Integer> COLLAR_COLOR = SynchedEntityData.defineId(GrayTabbyCat.class, EntityDataSerializers.INT);
 
     public GrayTabbyCat(EntityType<GrayTabbyCat> type, Level level) {
         super(type, level);
+
+        // Assign a random color variant
+        if (!level.isClientSide) {
+            setGrayTabbyVariant(GrayTabbyCatVariant.getRandomVariant(random));
+        }
 
         this.goalSelector.addGoal(1, new SitWhenOrderedToGoal(this));
         this.goalSelector.addGoal(2, new AIMeleeAttack(this));
@@ -58,14 +65,24 @@ public class GrayTabbyCat extends Cat {
     }
 
     @Override
-    public boolean causeFallDamage(float f, float g, DamageSource damageSource) {
+    public boolean causeFallDamage(float f, float g, @NotNull DamageSource damageSource) {
         return false;
     }
 
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
+        entityData.define(VARIANT, GrayTabbyCatVariant.DEFAULT.ordinal());
         entityData.define(COLLAR_COLOR, DyeColor.GRAY.getId());
+    }
+
+    @NotNull
+    public GrayTabbyCatVariant getGrayTabbyVariant() {
+        return GrayTabbyCatVariant.byId(entityData.get(VARIANT));
+    }
+
+    public void setGrayTabbyVariant(GrayTabbyCatVariant variant) {
+        entityData.set(VARIANT, variant.getId());
     }
 
     public @NotNull DyeColor getCollarColor() {
