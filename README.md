@@ -1,4 +1,4 @@
-### A 1.20.1 forge mod that adds Gray Tabby cat variants to your minecraft world.
+### A simple minecraft mod that adds Gray Tabby Cat variants to your minecraft world along with some misc features.
 
 ## [For more info, visit the official mod page here.](https://legacy.curseforge.com/minecraft/mc-mods/graytabbycatmod)
 
