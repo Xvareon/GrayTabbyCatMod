@@ -35,7 +35,8 @@ public class Barnacle extends Squid {
     public int animateTicks = 0;
     private static final EntityDataAccessor<Integer> LOOK_TARGET = SynchedEntityData.defineId(Barnacle.class, EntityDataSerializers.INT);
     public static final float ATTACK_REACH_SQR = 36;
-    public float sizeMultiplier;
+
+    private static final EntityDataAccessor<Float> SIZE_MULTIPLIER = SynchedEntityData.defineId(Barnacle.class, EntityDataSerializers.FLOAT);
 
     private static final EntityDataAccessor<Integer> VARIANT = SynchedEntityData.defineId(Barnacle.class, EntityDataSerializers.INT);
 
@@ -44,13 +45,14 @@ public class Barnacle extends Squid {
         super(entityType, level);
 
         float[] possibleSizes = {1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 12.0f};
-        this.sizeMultiplier = possibleSizes[random.nextInt(possibleSizes.length)];
-        this.refreshDimensions(); // Update hitbox
 
         // Assign a random color variant
         if (!level.isClientSide) {
+            setSizeMultiplier(possibleSizes[random.nextInt(possibleSizes.length)]);
             setVariant(BarnacleVariant.getRandomVariant(random));
         }
+
+        this.refreshDimensions(); // Update hitbox
     }
 
     @NotNull
@@ -66,7 +68,17 @@ public class Barnacle extends Squid {
     protected void defineSynchedData() {
         super.defineSynchedData();
         entityData.define(LOOK_TARGET, -1);
+        entityData.define(SIZE_MULTIPLIER, 1.0f);
         entityData.define(VARIANT, BarnacleVariant.DEFAULT.ordinal()); // Default to BLUE
+    }
+
+    public float getSizeMultiplier() {
+        return entityData.get(SIZE_MULTIPLIER);
+    }
+
+    public void setSizeMultiplier(float size) {
+        entityData.set(SIZE_MULTIPLIER, size);
+        this.refreshDimensions();
     }
 
     public BarnacleVariant getVariant() {
@@ -81,12 +93,16 @@ public class Barnacle extends Squid {
     @Override
     public void addAdditionalSaveData(@NotNull CompoundTag compound) {
         super.addAdditionalSaveData(compound);
+        compound.putFloat("SizeMultiplier", this.getSizeMultiplier());
         compound.putInt("BarnacleVariant", this.getVariant().getId()); // Save variant ID
     }
 
     @Override
     public void readAdditionalSaveData(@NotNull CompoundTag compound) {
         super.readAdditionalSaveData(compound);
+        if (compound.contains("SizeMultiplier")) {
+            this.setSizeMultiplier(compound.getFloat("SizeMultiplier"));
+        }
         if (compound.contains("BarnacleVariant")) {
             this.setVariant(BarnacleVariant.byId(compound.getInt("BarnacleVariant"))); // Load variant ID
         }
@@ -98,6 +114,18 @@ public class Barnacle extends Squid {
 
     public void setLookTarget(int lookTarget) {
         entityData.set(LOOK_TARGET, lookTarget);
+    }
+
+    @NotNull
+    @Override
+    public EntityDimensions getDimensions(@NotNull Pose pose) {
+        return super.getDimensions(pose).scale(getSizeMultiplier());
+    }
+
+    @Override
+    public void onAddedToWorld() {
+        super.onAddedToWorld();
+        this.refreshDimensions(); // Ensure hitbox updates
     }
 
     @Override
@@ -221,22 +249,6 @@ public class Barnacle extends Squid {
                 squid.setMovementVector($$2, $$3, $$4);
             }
         }
-    }
-
-    @NotNull
-    @Override
-    public EntityDimensions getDimensions(@NotNull Pose pose) {
-        return super.getDimensions(pose).scale(getSizeMultiplier());
-    }
-
-    @Override
-    public void onAddedToWorld() {
-        super.onAddedToWorld();
-        this.refreshDimensions(); // Ensure hitbox updates
-    }
-
-    public float getSizeMultiplier() {
-        return this.sizeMultiplier;
     }
 
     public float getAttackReachDistance() {
