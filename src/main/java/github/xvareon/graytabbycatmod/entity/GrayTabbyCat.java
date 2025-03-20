@@ -4,23 +4,19 @@ import java.util.UUID;
 
 import github.xvareon.graytabbycatmod.init.EntityInit;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.goal.SitWhenOrderedToGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.animal.Cat;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import org.jetbrains.annotations.NotNull;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -41,13 +37,20 @@ public class GrayTabbyCat extends Cat {
 
     private static final EntityDataAccessor<Integer> COLLAR_COLOR = SynchedEntityData.defineId(GrayTabbyCat.class, EntityDataSerializers.INT);
 
+    private static final EntityDataAccessor<Float> SIZE_MULTIPLIER = SynchedEntityData.defineId(GrayTabbyCat.class, EntityDataSerializers.FLOAT);
+
     public GrayTabbyCat(EntityType<GrayTabbyCat> type, Level level) {
         super(type, level);
 
+        float[] possibleSizes = {0.5f, 0.6f, 0.75f, 0.85f, 0.9f, 1.0f, 1.1f, 1.2f, 1.25f};
+
         // Assign a random color variant
         if (!level.isClientSide) {
+            setSizeMultiplier(possibleSizes[random.nextInt(possibleSizes.length)]);
             setGrayTabbyVariant(GrayTabbyCatVariant.getRandomVariant(random));
         }
+
+        this.refreshDimensions(); // Update hitbox
 
         this.goalSelector.addGoal(1, new SitWhenOrderedToGoal(this));
         this.goalSelector.addGoal(2, new AIMeleeAttack(this));
@@ -65,13 +68,9 @@ public class GrayTabbyCat extends Cat {
     }
 
     @Override
-    public boolean causeFallDamage(float f, float g, @NotNull DamageSource damageSource) {
-        return false;
-    }
-
-    @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
+        entityData.define(SIZE_MULTIPLIER, 1.0f);
         entityData.define(VARIANT, GrayTabbyCatVariant.DEFAULT.ordinal());
         entityData.define(COLLAR_COLOR, DyeColor.GRAY.getId());
     }
@@ -93,10 +92,32 @@ public class GrayTabbyCat extends Cat {
         this.entityData.set(COLLAR_COLOR, collarcolor.getId());
     }
 
+    public float getSizeMultiplier() {
+        return entityData.get(SIZE_MULTIPLIER);
+    }
+
+    public void setSizeMultiplier(float size) {
+        entityData.set(SIZE_MULTIPLIER, size);
+        this.refreshDimensions();
+    }
+
+    @NotNull
+    @Override
+    public EntityDimensions getDimensions(@NotNull Pose pose) {
+        return super.getDimensions(pose).scale(getSizeMultiplier());
+    }
+
+    @Override
+    public void onAddedToWorld() {
+        super.onAddedToWorld();
+        this.refreshDimensions(); // Ensure hitbox updates
+    }
+
     // For Dye saves
     @Override
     public void addAdditionalSaveData(@NotNull CompoundTag compound) {
         super.addAdditionalSaveData(compound);
+        compound.putFloat("SizeMultiplier", this.getSizeMultiplier());
         compound.putInt("GrayTabbyCatVariant", this.getGrayTabbyVariant().getId()); // Save variant ID
         compound.putByte("CollarColor", (byte)this.getCollarColor().getId());
     }
@@ -104,6 +125,9 @@ public class GrayTabbyCat extends Cat {
     @Override
     public void readAdditionalSaveData(@NotNull CompoundTag compound) {
         super.readAdditionalSaveData(compound);
+        if (compound.contains("SizeMultiplier")) {
+            this.setSizeMultiplier(compound.getFloat("SizeMultiplier"));
+        }
         if (compound.contains("GrayTabbyCatVariant")) {
             this.setGrayTabbyVariant(GrayTabbyCatVariant.byId(compound.getInt("GrayTabbyCatVariant"))); // Load variant ID
         }
@@ -132,6 +156,11 @@ public class GrayTabbyCat extends Cat {
         }
 
         return super.mobInteract(player, hand);
+    }
+
+    @Override
+    public boolean causeFallDamage(float f, float g, @NotNull DamageSource damageSource) {
+        return false;
     }
 
     public static AttributeSupplier.@NotNull Builder createAttributes() {

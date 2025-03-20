@@ -59,6 +59,12 @@ public class GrayTabbyCatRenderer extends MobRenderer<GrayTabbyCat, CatModel<Gra
         return TEXTURES.getOrDefault(entity.getGrayTabbyVariant(), TEXTURES.get(GrayTabbyCatVariant.DEFAULT));
     }
 
+    @Override
+    protected void scale(@NotNull GrayTabbyCat entity, @NotNull PoseStack poseStack, float partialTickTime) {
+        float scale = entity.getSizeMultiplier(); // Get the random scale
+        poseStack.scale(scale, scale, scale); // Apply scaling to the model
+    }
+
     static class GrayTabbyCatCollarLayer extends RenderLayer<GrayTabbyCat, CatModel<GrayTabbyCat>> {
 
         public GrayTabbyCatCollarLayer(RenderLayerParent<GrayTabbyCat, CatModel<GrayTabbyCat>> renderer) {
