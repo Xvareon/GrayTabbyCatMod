@@ -2,6 +2,7 @@ package github.xvareon.graytabbycatmod.entity;
 
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -17,6 +18,7 @@ import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.animal.*;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.phys.Vec3;
@@ -74,6 +76,21 @@ public class Barnacle extends Squid {
 
     public void setVariant(BarnacleVariant variant) {
         entityData.set(VARIANT, variant.getId());
+    }
+
+    // For Dye saves
+    @Override
+    public void addAdditionalSaveData(@NotNull CompoundTag compound) {
+        super.addAdditionalSaveData(compound);
+        compound.putInt("BarnacleVariant", this.getVariant().getId()); // Save variant ID
+    }
+
+    @Override
+    public void readAdditionalSaveData(@NotNull CompoundTag compound) {
+        super.readAdditionalSaveData(compound);
+        if (compound.contains("BarnacleVariant")) {
+            this.setVariant(BarnacleVariant.byId(compound.getInt("BarnacleVariant"))); // Load variant ID
+        }
     }
 
     public int getLookTarget() {

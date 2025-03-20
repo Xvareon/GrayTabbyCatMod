@@ -97,14 +97,19 @@ public class GrayTabbyCat extends Cat {
     @Override
     public void addAdditionalSaveData(@NotNull CompoundTag compound) {
         super.addAdditionalSaveData(compound);
+        compound.putInt("GrayTabbyCatVariant", this.getGrayTabbyVariant().getId()); // Save variant ID
         compound.putByte("CollarColor", (byte)this.getCollarColor().getId());
     }
 
     @Override
     public void readAdditionalSaveData(@NotNull CompoundTag compound) {
         super.readAdditionalSaveData(compound);
-        if (compound.contains("CollarColor"))
+        if (compound.contains("GrayTabbyCatVariant")) {
+            this.setGrayTabbyVariant(GrayTabbyCatVariant.byId(compound.getInt("GrayTabbyCatVariant"))); // Load variant ID
+        }
+        if (compound.contains("CollarColor")){
             this.setCollarColor(DyeColor.byId(compound.getByte("CollarColor")));
+        }
     }
 
     // For Dye
