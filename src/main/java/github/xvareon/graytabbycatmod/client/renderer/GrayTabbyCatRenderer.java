@@ -42,7 +42,8 @@ public class GrayTabbyCatRenderer extends MobRenderer<GrayTabbyCat, CatModel<Gra
                 Map.entry(GrayTabbyCatVariant.WHITE_CYAN, new ResourceLocation(GrayTabbyCatMod.MODID, "textures/entity/graytabbycat_white_cyan.png")),
                 Map.entry(GrayTabbyCatVariant.WHITE_PINK, new ResourceLocation(GrayTabbyCatMod.MODID, "textures/entity/graytabbycat_white_pink.png")),
                 Map.entry(GrayTabbyCatVariant.GRAY, new ResourceLocation(GrayTabbyCatMod.MODID, "textures/entity/graytabbycat_gray.png")),
-                Map.entry(GrayTabbyCatVariant.VIOLET, new ResourceLocation(GrayTabbyCatMod.MODID, "textures/entity/graytabbycat_violet.png"))
+                Map.entry(GrayTabbyCatVariant.VIOLET, new ResourceLocation(GrayTabbyCatMod.MODID, "textures/entity/graytabbycat_violet.png")),
+                Map.entry(GrayTabbyCatVariant.GREY, new ResourceLocation(GrayTabbyCatMod.MODID, "textures/entity/graytabbycat_grey.png"))
         )));
 
     private static final ResourceLocation COLLAR = new ResourceLocation(GrayTabbyCatMod.MODID, "textures/collar.png");

@@ -29,7 +29,8 @@ public enum GrayTabbyCatVariant implements StringRepresentable {
     WHITE_CYAN(16, "white_cyan"),
     WHITE_PINK(17, "white_pink"),
     GRAY(18, "gray"),
-    VIOLET(19, "violet");
+    VIOLET(19, "violet"),
+    GREY(20, "grey");
 
     private static final GrayTabbyCatVariant[] BY_ID = Arrays.stream(values()).sorted((a, b) -> Integer.compare(a.id, b.id)).toArray(GrayTabbyCatVariant[]::new);
     private static final Map<String, GrayTabbyCatVariant> BY_NAME = Arrays.stream(values())
