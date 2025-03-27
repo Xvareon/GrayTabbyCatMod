@@ -9,5 +9,7 @@
   "entity.graytabbycatmod.dragon_fireball": "Dragon Fireball",
   "item.graytabbycatmod.dragon_fireball": "Dragon Fireball",
   "entity.graytabbycatmod.lightning_charge": "Lightning Charge",
-  "item.graytabbycatmod.lightning_charge": "Lightning Charge"
+  "item.graytabbycatmod.lightning_charge": "Lightning Charge",
+  "item.graytabbycatmod.tamable_ocelot_spawn_egg": "Spawn Tamable Ocelot",
+  "entity.graytabbycatmod.tamable_ocelot": "Ocelot"
 }

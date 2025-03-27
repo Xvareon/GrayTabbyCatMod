@@ -1,10 +1,7 @@
 package github.xvareon.graytabbycatmod.init;
 
 import github.xvareon.graytabbycatmod.GrayTabbyCatMod;
-import github.xvareon.graytabbycatmod.entity.Barnacle;
-import github.xvareon.graytabbycatmod.entity.DragonFireball;
-import github.xvareon.graytabbycatmod.entity.GrayTabbyCat;
-import github.xvareon.graytabbycatmod.entity.LightningCharge;
+import github.xvareon.graytabbycatmod.entity.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
@@ -14,6 +11,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 public class EntityInit {
     public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, GrayTabbyCatMod.MODID);
+
     public static final RegistryObject<EntityType<GrayTabbyCat>> GRAY_TABBY_CAT = ENTITIES.register("gray_tabby_cat",
             () -> EntityType.Builder.<GrayTabbyCat>of(GrayTabbyCat::new, MobCategory.CREATURE)
                     .sized(1.0f, 1.0f)
@@ -36,5 +34,11 @@ public class EntityInit {
             () -> EntityType.Builder.<Barnacle>of(Barnacle::new, MobCategory.MONSTER)
                     .sized(1.0f, 1.0f)
                     .build(new ResourceLocation(GrayTabbyCatMod.MODID, "barnacle").toString())
+    );
+
+    public static final RegistryObject<EntityType<TamableOcelot>> TAMABLE_OCELOT = ENTITIES.register("tamable_ocelot",
+            () -> EntityType.Builder.<TamableOcelot>of(TamableOcelot::new, MobCategory.CREATURE)
+                    .sized(1.0f, 1.0f)
+                    .build(new ResourceLocation(GrayTabbyCatMod.MODID, "tamable_ocelot").toString())
     );
 }

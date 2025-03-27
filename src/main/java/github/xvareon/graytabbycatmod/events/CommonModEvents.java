@@ -3,6 +3,7 @@ package github.xvareon.graytabbycatmod.events;
 import github.xvareon.graytabbycatmod.GrayTabbyCatMod;
 import github.xvareon.graytabbycatmod.entity.Barnacle;
 import github.xvareon.graytabbycatmod.entity.GrayTabbyCat;
+import github.xvareon.graytabbycatmod.entity.TamableOcelot;
 import github.xvareon.graytabbycatmod.init.EntityInit;
 import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.level.levelgen.Heightmap;
@@ -19,6 +20,7 @@ public class CommonModEvents {
     public static void entityAttributes(EntityAttributeCreationEvent event){
         event.put(EntityInit.GRAY_TABBY_CAT.get(), GrayTabbyCat.createAttributes().build());
         event.put(EntityInit.BARNACLE.get(), Barnacle.createAttributes().build());
+        event.put(EntityInit.TAMABLE_OCELOT.get(), TamableOcelot.createAttributes().build());
     }
 
     @SubscribeEvent
@@ -35,6 +37,13 @@ public class CommonModEvents {
                 SpawnPlacements.Type.IN_WATER,
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 Barnacle::canSpawn,
+                SpawnPlacementRegisterEvent.Operation.OR
+        );
+        event.register(
+                EntityInit.TAMABLE_OCELOT.get(),
+                SpawnPlacements.Type.ON_GROUND,
+                Heightmap.Types.WORLD_SURFACE,
+                TamableOcelot::canSpawn,
                 SpawnPlacementRegisterEvent.Operation.OR
         );
     }

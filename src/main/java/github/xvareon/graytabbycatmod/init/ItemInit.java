@@ -14,6 +14,7 @@ import static github.xvareon.graytabbycatmod.init.CreativeTabInit.addToTab;
 public class ItemInit {
 
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, GrayTabbyCatMod.MODID);
+
     public static final RegistryObject<ForgeSpawnEggItem> GRAY_TABBY_CAT_SPAWN_EGG = addToTab(ITEMS.register("gray_tabby_cat_spawn_egg",
             () -> new ForgeSpawnEggItem(EntityInit.GRAY_TABBY_CAT, 0x746d67, 0x413b37, new Item.Properties())));
 
@@ -32,4 +33,7 @@ public class ItemInit {
 
     public static final RegistryObject<ForgeSpawnEggItem> BARNACLE_SPAWN_EGG = addToTab(ITEMS.register("barnacle_spawn_egg",
             () -> new ForgeSpawnEggItem(EntityInit.BARNACLE, 0x746d67, 0x413b37, new Item.Properties())));
+
+    public static final RegistryObject<ForgeSpawnEggItem> TAMABLE_OCELOT_SPAWN_EGG = addToTab(ITEMS.register("tamable_ocelot_spawn_egg",
+            () -> new ForgeSpawnEggItem(EntityInit.TAMABLE_OCELOT, 0xF9B233, 0x493C2B, new Item.Properties())));
 }
