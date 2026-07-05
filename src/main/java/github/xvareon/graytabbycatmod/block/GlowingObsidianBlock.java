@@ -30,6 +30,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
+import org.jetbrains.annotations.NotNull;
 
 public class GlowingObsidianBlock extends ConcretePowderBlock {
 
@@ -38,14 +39,14 @@ public class GlowingObsidianBlock extends ConcretePowderBlock {
     }
 
     @Override
-    public void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean isMoving) {
+    public void onPlace(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull BlockState oldState, boolean isMoving) {
         if (touchesLiquid(level, pos)) {
             turnIntoObsidian(level, pos);
         }
     }
 
     @Override
-    public boolean isPathfindable(BlockState blockState, BlockGetter getter, BlockPos blockPos, PathComputationType computationType) {
+    public boolean isPathfindable(@NotNull BlockState blockState, @NotNull BlockGetter getter, @NotNull BlockPos blockPos, @NotNull PathComputationType computationType) {
         return false;
     }
 
@@ -54,7 +55,7 @@ public class GlowingObsidianBlock extends ConcretePowderBlock {
         return true;
     }
 
-    public void stepOn(Level level, BlockPos blockPos, BlockState blockState, Entity entity) {
+    public void stepOn(@NotNull Level level, @NotNull BlockPos blockPos, @NotNull BlockState blockState, @NotNull Entity entity) {
         if (!entity.isSteppingCarefully() && entity instanceof LivingEntity && !EnchantmentHelper.hasFrostWalker((LivingEntity) entity)) {
             entity.hurt(level.damageSources().hotFloor(), 1.0F);
             entity.setSecondsOnFire(3);
@@ -67,7 +68,7 @@ public class GlowingObsidianBlock extends ConcretePowderBlock {
         return BlockPathTypes.DANGER_FIRE;
     }
 
-    public void animateTick(BlockState stateIn, Level worldIn, BlockPos pos, RandomSource rand) {
+    public void animateTick(@NotNull BlockState stateIn, @NotNull Level worldIn, @NotNull BlockPos pos, @NotNull RandomSource rand) {
         super.animateTick(stateIn, worldIn, pos, rand);
 
         if(rand.nextInt(5) == 0 && worldIn.getBlockState(pos.above()).isAir()){
@@ -81,24 +82,24 @@ public class GlowingObsidianBlock extends ConcretePowderBlock {
         }
     }
 
-    public BlockState getStateForPlacement(BlockPlaceContext context) {
+    public @NotNull BlockState getStateForPlacement(@NotNull BlockPlaceContext context) {
         return this.defaultBlockState();
     }
 
-    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos currentPos, BlockPos neighborPos) {
+    public @NotNull BlockState updateShape(@NotNull BlockState state, @NotNull Direction direction, @NotNull BlockState neighborState, @NotNull LevelAccessor level, @NotNull BlockPos currentPos, @NotNull BlockPos neighborPos) {
         level.scheduleTick(currentPos, this, this.getDelayAfterPlace());
         return state;
     }
 
     @Override
-    public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
+    public void tick(@NotNull BlockState state, @NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull RandomSource random) {
         if (touchesLiquid(level, pos)) {
             turnIntoObsidian(level, pos);
         }
     }
 
     @Override
-    public boolean triggerEvent(BlockState state, Level level, BlockPos pos, int id, int param) {
+    public boolean triggerEvent(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, int id, int param) {
         if (id == 1) {
             if (shouldTurnToObsidian(level, pos)) {
                 turnIntoObsidian(level, pos);
@@ -173,7 +174,7 @@ public class GlowingObsidianBlock extends ConcretePowderBlock {
     }
 
     @Override
-    protected void spawnDestroyParticles(Level level, Player player, BlockPos pos, BlockState state) {
+    protected void spawnDestroyParticles(@NotNull Level level, @NotNull Player player, @NotNull BlockPos pos, @NotNull BlockState state) {
         if (level.isClientSide) {
             spawnDissolveParticles(level, pos);
         }
@@ -181,7 +182,7 @@ public class GlowingObsidianBlock extends ConcretePowderBlock {
         level.playSound(null, pos, soundtype.getBreakSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
     }
 
-    private void fillBucket(Player player, int startIndex) {
+    private void fillBucket(@NotNull Player player, int startIndex) {
         Inventory inv = player.getInventory();
         for(int i = startIndex; i < inv.getContainerSize(); i++) {
             ItemStack stackInSlot = inv.getItem(i);
@@ -197,7 +198,7 @@ public class GlowingObsidianBlock extends ConcretePowderBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult raytrace) {
+    public @NotNull InteractionResult use(@NotNull BlockState state, @NotNull Level world, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult raytrace) {
 
         ItemStack stack = player.getItemInHand(hand);
 

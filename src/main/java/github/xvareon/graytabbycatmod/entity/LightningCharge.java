@@ -2,20 +2,16 @@ package github.xvareon.graytabbycatmod.entity;
 
 import github.xvareon.graytabbycatmod.init.EntityInit;
 import github.xvareon.graytabbycatmod.init.ItemInit;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
-
-import java.util.List;
+import org.jetbrains.annotations.NotNull;
 
 public class LightningCharge extends ThrowableItemProjectile {
 
@@ -32,12 +28,12 @@ public class LightningCharge extends ThrowableItemProjectile {
     }
 
     @Override
-    protected Item getDefaultItem() {
+    protected @NotNull Item getDefaultItem() {
         return ItemInit.LIGHTNING_CHARGE.get();
     }
 
     @Override
-    protected void onHit(HitResult pResult) {
+    protected void onHit(@NotNull HitResult pResult) {
         super.onHit(pResult);
         if (pResult.getType() != HitResult.Type.ENTITY || !this.ownedBy(((EntityHitResult)pResult).getEntity())) {
             if (!this.level().isClientSide) {
@@ -52,7 +48,7 @@ public class LightningCharge extends ThrowableItemProjectile {
     }
 
     @Override
-    protected void onHitEntity(EntityHitResult entityHitResult) {
+    protected void onHitEntity(@NotNull EntityHitResult entityHitResult) {
         super.onHitEntity(entityHitResult);
 
         if (!this.level().isClientSide) {
@@ -64,16 +60,11 @@ public class LightningCharge extends ThrowableItemProjectile {
         }
     }
 
-    @Override
-    public boolean isPickable() {
-        return false;
-    }
-
     /**
      * Called when the entity is attacked.
      */
     @Override
-    public boolean hurt(DamageSource pSource, float pAmount) {
+    public boolean hurt(@NotNull DamageSource pSource, float pAmount) {
         return false;
     }
 

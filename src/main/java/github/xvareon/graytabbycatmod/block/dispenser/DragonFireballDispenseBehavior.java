@@ -8,11 +8,12 @@ import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DispenserBlock;
+import org.jetbrains.annotations.NotNull;
 
 public class DragonFireballDispenseBehavior extends DefaultDispenseItemBehavior {
 
     @Override
-    protected ItemStack execute(BlockSource source, ItemStack stack) {
+    protected @NotNull ItemStack execute(BlockSource source, ItemStack stack) {
         Level level = source.getLevel();
         Direction direction = source.getBlockState().getValue(DispenserBlock.FACING);
 

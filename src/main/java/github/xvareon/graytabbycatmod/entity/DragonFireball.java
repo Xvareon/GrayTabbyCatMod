@@ -16,6 +16,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -34,12 +35,12 @@ public class DragonFireball extends ThrowableItemProjectile {
     }
 
     @Override
-    protected Item getDefaultItem() {
+    protected @NotNull Item getDefaultItem() {
         return ItemInit.DRAGON_FIREBALL.get();
     }
 
     @Override
-    protected void onHit(HitResult pResult) {
+    protected void onHit(@NotNull HitResult pResult) {
         super.onHit(pResult);
         if (pResult.getType() != HitResult.Type.ENTITY || !this.ownedBy(((EntityHitResult)pResult).getEntity())) {
             if (!this.level().isClientSide) {
@@ -72,16 +73,11 @@ public class DragonFireball extends ThrowableItemProjectile {
         }
     }
 
-    @Override
-    public boolean isPickable() {
-        return false;
-    }
-
     /**
      * Called when the entity is attacked.
      */
     @Override
-    public boolean hurt(DamageSource pSource, float pAmount) {
+    public boolean hurt(@NotNull DamageSource pSource, float pAmount) {
         return false;
     }
 

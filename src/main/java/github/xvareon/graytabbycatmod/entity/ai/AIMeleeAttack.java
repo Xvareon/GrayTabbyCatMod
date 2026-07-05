@@ -102,8 +102,7 @@ public class AIMeleeAttack extends Goal {
             entitylivingbase.startRiding(this.attacker, true);
             // Set liftY so entity can continue moving up from the spot
             this.liftY = entitylivingbase.getY();
-            if (entitylivingbase instanceof Mob) {
-                Mob target = (Mob) entitylivingbase;
+            if (entitylivingbase instanceof Mob target) {
                 target.setTarget(null);
                 target.setLastHurtByMob(null);
                 target.getNavigation().stop();
@@ -117,8 +116,7 @@ public class AIMeleeAttack extends Goal {
         if (attacker.getPassengers().isEmpty() && this.attacker.getCommandSenderWorld().getBlockState(this.attacker.blockPosition().above()).isRedstoneConductor(world, this.attacker.blockPosition().above())) {
             // Release target
             entitylivingbase.stopRiding();
-            if (entitylivingbase instanceof Mob) {
-                Mob target = (Mob) entitylivingbase;
+            if (entitylivingbase instanceof Mob target) {
                 target.setNoAi(false);
             }
             // Remove target
@@ -134,8 +132,7 @@ public class AIMeleeAttack extends Goal {
         // If we've about reached the target lifting point and have a target grabbed, or have completed movement, drop the entity
         if (!attacker.getPassengers().isEmpty()) {
             entitylivingbase.stopRiding();
-            if (entitylivingbase instanceof Mob) {
-                Mob target = (Mob) entitylivingbase;
+            if (entitylivingbase instanceof Mob target) {
                 target.setNoAi(false);
             }
         }

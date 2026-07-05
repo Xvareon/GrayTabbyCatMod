@@ -34,12 +34,12 @@ public class SoulSandGlassBlock extends ScaffoldingBlock {
         super(properties);
     }
     @SuppressWarnings("deprecation")
-    public boolean isPathfindable(BlockState state, BlockGetter level, BlockPos pos, PathComputationType pathComputationType) {
+    public boolean isPathfindable(@NotNull BlockState state, @NotNull BlockGetter level, @NotNull BlockPos pos, @NotNull PathComputationType pathComputationType) {
         return false;
     }
 
     @SuppressWarnings("deprecation")
-    public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
+    public void entityInside(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull Entity entity) {
         if (entity instanceof LivingEntity livingEntity && !EnchantmentHelper.hasSoulSpeed(livingEntity)) {
             double soulSandSlowFactor = 0.2;
             entity.setDeltaMovement(entity.getDeltaMovement().multiply(soulSandSlowFactor, 1.0, soulSandSlowFactor));
@@ -69,7 +69,7 @@ public class SoulSandGlassBlock extends ScaffoldingBlock {
 
     // Slow Entities when they step on the block
     @Override
-    public void stepOn(Level level, BlockPos blockPos, BlockState blockState, Entity entity) {
+    public void stepOn(@NotNull Level level, @NotNull BlockPos blockPos, @NotNull BlockState blockState, @NotNull Entity entity) {
         if (!entity.isSteppingCarefully() && entity instanceof LivingEntity && !EnchantmentHelper.hasFrostWalker((LivingEntity) entity)) {
 
             double soulSandSlowFactor = 0.2;
@@ -95,12 +95,12 @@ public class SoulSandGlassBlock extends ScaffoldingBlock {
     }
 
     @Override
-    public boolean canBeReplaced(BlockState state, BlockPlaceContext context) {
+    public boolean canBeReplaced(@NotNull BlockState state, @NotNull BlockPlaceContext context) {
         return false;
     }
 
     @Override
-    public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
+    public void tick(@NotNull BlockState state, @NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull RandomSource random) {
         BlockPos currentPos = pos.above();
         BlockState currentState = level.getBlockState(currentPos);
 
@@ -111,15 +111,15 @@ public class SoulSandGlassBlock extends ScaffoldingBlock {
     }
 
     @Override
-    public @NotNull InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+    public @NotNull InteractionResult use(@NotNull BlockState state, @NotNull Level world, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
         return InteractionResult.PASS;
     }
 
-    public boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
+    public boolean canSurvive(@NotNull BlockState state, @NotNull LevelReader level, @NotNull BlockPos pos) {
         return true;
     }
 
-    private boolean isSourceWaterAbove(Level level, BlockPos pos) {
+    private boolean isSourceWaterAbove(@NotNull Level level, @NotNull BlockPos pos) {
         FluidState aboveFluidState = level.getFluidState(pos.above());
         return aboveFluidState.getType() == Fluids.WATER && aboveFluidState.isSource();
     }
