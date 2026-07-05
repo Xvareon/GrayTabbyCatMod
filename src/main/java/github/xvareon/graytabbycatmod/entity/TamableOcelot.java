@@ -1,6 +1,5 @@
 package github.xvareon.graytabbycatmod.entity;
 
-import github.xvareon.graytabbycatmod.init.EntityInit;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -44,11 +43,6 @@ public class TamableOcelot extends Cat {
                 return !TamableOcelot.this.isInSittingPose() && !TamableOcelot.this.isOrderedToSit() && super.canUse();
             }
         });
-    }
-
-    public TamableOcelot(Level level, BlockPos position) {
-        super(EntityInit.TAMABLE_OCELOT.get(), level);
-        this.setPos(position.getX(), position.getY(), position.getZ());
     }
 
     @Override
@@ -131,16 +125,17 @@ public class TamableOcelot extends Cat {
 
     @Override
     public Cat getBreedOffspring(@NotNull ServerLevel level, @NotNull AgeableMob otherParent) {
+        @SuppressWarnings("unchecked")
+        EntityType<TamableOcelot> type = (EntityType<TamableOcelot>) this.getType();
+        TamableOcelot baby = new TamableOcelot(type, level);
+        baby.setPos(this.blockPosition().getX(), this.blockPosition().getY(), this.blockPosition().getZ());
 
-        TamableOcelot babycat = new TamableOcelot(level, this.blockPosition());
-
-        // Set the ownership of the baby
         UUID uuid = this.getOwnerUUID();
         if (uuid != null) {
-            babycat.setOwnerUUID(uuid);
-            babycat.setTame(true);
+            baby.setOwnerUUID(uuid);
+            baby.setTame(true);
         }
 
-        return babycat;
+        return baby;
     }
 }

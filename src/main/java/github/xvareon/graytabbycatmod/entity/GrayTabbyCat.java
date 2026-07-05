@@ -2,7 +2,6 @@ package github.xvareon.graytabbycatmod.entity;
 
 import java.util.UUID;
 
-import github.xvareon.graytabbycatmod.init.EntityInit;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.goal.SitWhenOrderedToGoal;
@@ -27,6 +26,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.DyeItem;
 
+import github.xvareon.graytabbycatmod.config.ModConfigHandler;
 import github.xvareon.graytabbycatmod.entity.ai.AIMeleeAttack;
 
 public class GrayTabbyCat extends Cat {
@@ -51,18 +51,16 @@ public class GrayTabbyCat extends Cat {
         this.refreshDimensions(); // Update hitbox
 
         this.goalSelector.addGoal(1, new SitWhenOrderedToGoal(this));
-        this.goalSelector.addGoal(2, new AIMeleeAttack(this));
-        this.targetSelector.addGoal(2, new OwnerHurtTargetGoal(this) {
-            @Override
-            public boolean canUse() {
-                return !GrayTabbyCat.this.isInSittingPose() && !GrayTabbyCat.this.isOrderedToSit() && super.canUse();
-            }
-        });
-    }
-
-    public GrayTabbyCat(Level level, BlockPos position) {
-        super(EntityInit.GRAY_TABBY_CAT.get(), level);
-        this.setPos(position.getX(), position.getY(), position.getZ());
+        // Add melee attack goal only when enabled in config
+        if (ModConfigHandler.COMMON.enableGrayTabbyCatAttack.get()) {
+            this.goalSelector.addGoal(2, new AIMeleeAttack(this));
+            this.targetSelector.addGoal(2, new OwnerHurtTargetGoal(this) {
+                @Override
+                public boolean canUse() {
+                    return !GrayTabbyCat.this.isInSittingPose() && !GrayTabbyCat.this.isOrderedToSit() && super.canUse();
+                }
+            });
+        }
     }
 
     @Override
@@ -171,16 +169,18 @@ public class GrayTabbyCat extends Cat {
 
     @Override
     public Cat getBreedOffspring(@NotNull ServerLevel level, @NotNull AgeableMob otherParent) {
-
-        GrayTabbyCat babycat = new GrayTabbyCat(level, this.blockPosition());
+        @SuppressWarnings("unchecked")
+        EntityType<GrayTabbyCat> type = (EntityType<GrayTabbyCat>) this.getType();
+        GrayTabbyCat baby = new GrayTabbyCat(type, level);
+        baby.setPos(this.blockPosition().getX(), this.blockPosition().getY(), this.blockPosition().getZ());
 
         // Set the ownership of the baby
         UUID uuid = this.getOwnerUUID();
         if (uuid != null) {
-            babycat.setOwnerUUID(uuid);
-            babycat.setTame(true);
+            baby.setOwnerUUID(uuid);
+            baby.setTame(true);
         }
 
-        return babycat;
+        return baby;
     }
 }
