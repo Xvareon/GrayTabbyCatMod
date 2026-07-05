@@ -1,0 +1,5 @@
+
+[general]
+	#Enable or disable Gray Tabby cat's attack goal [Default: false]
+	enableGrayTabbyCatAttack = false
+

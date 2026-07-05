@@ -41,4 +41,30 @@ public class ModConfigHandler {
             //
         }
     }
+
+    /**
+     * Safe getter for config values that defaults to the provided fallback
+     * if the config is not yet loaded, has an invalid value, or any error occurs.
+     * Catches:
+     * - IllegalStateException: config not loaded yet (dev environment)
+     * - ClassCastException: user entered wrong type (e.g., string instead of boolean)
+     * - Any other exception as a defensive measure
+     * @param configValue the ForgeConfigSpec.BooleanValue to read
+     * @param defaultValue the fallback value if config is unavailable or invalid
+     * @return the config value if available and valid, otherwise defaultValue
+     */
+    public static boolean safeGetBoolean(ForgeConfigSpec.BooleanValue configValue, boolean defaultValue) {
+        try {
+            return configValue.get();
+        } catch (IllegalStateException ex) {
+            // Config not loaded yet in dev environment
+            return defaultValue;
+        } catch (ClassCastException ex) {
+            // User entered a non-boolean value (e.g., "yes" instead of true)
+            return defaultValue;
+        } catch (Exception ex) {
+            // Defensive: any other unexpected error, use default
+            return defaultValue;
+        }
+    }
 }

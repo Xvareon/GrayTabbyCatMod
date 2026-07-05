@@ -51,8 +51,8 @@ public class GrayTabbyCat extends Cat {
         this.refreshDimensions(); // Update hitbox
 
         this.goalSelector.addGoal(1, new SitWhenOrderedToGoal(this));
-        // Add melee attack goal only when enabled in config
-        if (ModConfigHandler.COMMON.enableGrayTabbyCatAttack.get()) {
+        // Add melee attack goal only when enabled in config (safely defaults to false if config not loaded)
+        if (ModConfigHandler.safeGetBoolean(ModConfigHandler.COMMON.enableGrayTabbyCatAttack, false)) {
             this.goalSelector.addGoal(2, new AIMeleeAttack(this));
             this.targetSelector.addGoal(2, new OwnerHurtTargetGoal(this) {
                 @Override
