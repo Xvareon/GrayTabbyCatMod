@@ -2,10 +2,13 @@ package github.xvareon.graytabbycatmod.entity;
 
 import java.util.UUID;
 
+import github.xvareon.graytabbycatmod.init.EntityInit;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.goal.BreedGoal;
 import net.minecraft.world.entity.ai.goal.SitWhenOrderedToGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
+import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.Cat;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -61,6 +64,7 @@ public class GrayTabbyCat extends Cat {
                 }
             });
         }
+        this.goalSelector.addGoal(3, new BreedGoal(this, 1.0D, Cat.class));
     }
 
     @Override
@@ -168,19 +172,58 @@ public class GrayTabbyCat extends Cat {
     }
 
     @Override
-    public Cat getBreedOffspring(@NotNull ServerLevel level, @NotNull AgeableMob otherParent) {
-        @SuppressWarnings("unchecked")
-        EntityType<GrayTabbyCat> type = (EntityType<GrayTabbyCat>) this.getType();
-        GrayTabbyCat baby = new GrayTabbyCat(type, level);
-        baby.setPos(this.blockPosition().getX(), this.blockPosition().getY(), this.blockPosition().getZ());
+    public boolean canMate(@NotNull Animal other) {
+        if (other == this) return false;
+        if (!(other instanceof Cat)) return false; // accept both vanilla Cat and GrayTabbyCat
+        return this.isInLove() && other.isInLove();
+    }
 
-        // Set the ownership of the baby
-        UUID uuid = this.getOwnerUUID();
-        if (uuid != null) {
-            baby.setOwnerUUID(uuid);
-            baby.setTame(true);
+    @Override
+    public Cat getBreedOffspring(@NotNull ServerLevel level, @NotNull AgeableMob otherParent) {
+        RandomSource random = level.getRandom();
+
+        // GrayTabby × GrayTabby → always GrayTabby
+        if (otherParent instanceof GrayTabbyCat) {
+            GrayTabbyCat baby = new GrayTabbyCat(EntityInit.GRAY_TABBY_CAT.get(), level);
+            baby.setPos(this.getX(), this.getY(), this.getZ());
+
+            UUID uuid = this.getOwnerUUID();
+            if (uuid != null) {
+                baby.setOwnerUUID(uuid);
+                baby.setTame(true);
+            }
+            return baby;
         }
 
-        return baby;
+        // GrayTabby × Cat → coin flip
+        if (otherParent instanceof Cat) {
+            if (random.nextBoolean()) {
+                // GrayTabby kitten
+                GrayTabbyCat baby = new GrayTabbyCat(EntityInit.GRAY_TABBY_CAT.get(), level);
+                baby.setPos(this.getX(), this.getY(), this.getZ());
+
+                UUID uuid = this.getOwnerUUID();
+                if (uuid != null) {
+                    baby.setOwnerUUID(uuid);
+                    baby.setTame(true);
+                }
+                return baby;
+            } else {
+                // Vanilla Cat kitten
+                Cat baby = EntityType.CAT.create(level);
+                if (baby != null) {
+                    baby.setPos(this.getX(), this.getY(), this.getZ());
+
+                    UUID uuid = this.getOwnerUUID();
+                    if (uuid != null) {
+                        baby.setOwnerUUID(uuid);
+                        baby.setTame(true);
+                    }
+                }
+                return baby;
+            }
+        }
+
+        return null;
     }
 }

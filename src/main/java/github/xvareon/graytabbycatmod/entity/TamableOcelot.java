@@ -1,5 +1,6 @@
 package github.xvareon.graytabbycatmod.entity;
 
+import github.xvareon.graytabbycatmod.init.EntityInit;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -15,8 +16,10 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.BreedGoal;
 import net.minecraft.world.entity.ai.goal.SitWhenOrderedToGoal;
 import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
+import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.Cat;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
@@ -43,6 +46,7 @@ public class TamableOcelot extends Cat {
                 return !TamableOcelot.this.isInSittingPose() && !TamableOcelot.this.isOrderedToSit() && super.canUse();
             }
         });
+        this.goalSelector.addGoal(3, new BreedGoal(this, 1.0D, Cat.class));
     }
 
     @Override
@@ -124,18 +128,58 @@ public class TamableOcelot extends Cat {
     }
 
     @Override
-    public Cat getBreedOffspring(@NotNull ServerLevel level, @NotNull AgeableMob otherParent) {
-        @SuppressWarnings("unchecked")
-        EntityType<TamableOcelot> type = (EntityType<TamableOcelot>) this.getType();
-        TamableOcelot baby = new TamableOcelot(type, level);
-        baby.setPos(this.blockPosition().getX(), this.blockPosition().getY(), this.blockPosition().getZ());
+    public boolean canMate(@NotNull Animal other) {
+        if (other == this) return false;
+        if (!(other instanceof Cat)) return false; // accept both vanilla Cat and TamableOcelot
+        return this.isInLove() && other.isInLove();
+    }
 
-        UUID uuid = this.getOwnerUUID();
-        if (uuid != null) {
-            baby.setOwnerUUID(uuid);
-            baby.setTame(true);
+    @Override
+    public Cat getBreedOffspring(@NotNull ServerLevel level, @NotNull AgeableMob otherParent) {
+        RandomSource random = level.getRandom();
+
+        // TamableOcelot × TamableOcelot → always TamableOcelot
+        if (otherParent instanceof TamableOcelot) {
+            TamableOcelot baby = new TamableOcelot(EntityInit.TAMABLE_OCELOT.get(), level);
+            baby.setPos(this.getX(), this.getY(), this.getZ());
+
+            UUID uuid = this.getOwnerUUID();
+            if (uuid != null) {
+                baby.setOwnerUUID(uuid);
+                baby.setTame(true);
+            }
+            return baby;
         }
 
-        return baby;
+        // TamableOcelot × Cat → coin flip
+        if (otherParent instanceof Cat) {
+            if (random.nextBoolean()) {
+                // TamableOcelot kitten
+                TamableOcelot baby = new TamableOcelot(EntityInit.TAMABLE_OCELOT.get(), level);
+                baby.setPos(this.getX(), this.getY(), this.getZ());
+
+                UUID uuid = this.getOwnerUUID();
+                if (uuid != null) {
+                    baby.setOwnerUUID(uuid);
+                    baby.setTame(true);
+                }
+                return baby;
+            } else {
+                // Vanilla Cat kitten
+                Cat baby = EntityType.CAT.create(level);
+                if (baby != null) {
+                    baby.setPos(this.getX(), this.getY(), this.getZ());
+
+                    UUID uuid = this.getOwnerUUID();
+                    if (uuid != null) {
+                        baby.setOwnerUUID(uuid);
+                        baby.setTame(true);
+                    }
+                }
+                return baby;
+            }
+        }
+
+        return null;
     }
 }
