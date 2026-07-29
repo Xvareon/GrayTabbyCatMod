@@ -130,56 +130,45 @@ public class TamableOcelot extends Cat {
     @Override
     public boolean canMate(@NotNull Animal other) {
         if (other == this) return false;
-        if (!(other instanceof Cat)) return false; // accept both vanilla Cat and TamableOcelot
-        return this.isInLove() && other.isInLove();
+        if (!(other instanceof Cat otherCat)) return false;
+        return this.isTame() && otherCat.isTame() && this.isInLove() && otherCat.isInLove();
     }
 
     @Override
     public Cat getBreedOffspring(@NotNull ServerLevel level, @NotNull AgeableMob otherParent) {
-        RandomSource random = level.getRandom();
+        Cat baby;
 
-        // TamableOcelot × TamableOcelot → always TamableOcelot
+        // 1. TamableOcelot × TamableOcelot → always TamableOcelot
         if (otherParent instanceof TamableOcelot) {
-            TamableOcelot baby = new TamableOcelot(EntityInit.TAMABLE_OCELOT.get(), level);
+            baby = new TamableOcelot(EntityInit.TAMABLE_OCELOT.get(), level);
+        }
+        // 2. TamableOcelot × Vanilla Cat → 50/50 chance
+        else if (otherParent instanceof Cat vanillaParent) {
+            boolean isOcelot = level.getRandom().nextBoolean();
+            if (isOcelot) {
+                baby = new TamableOcelot(EntityInit.TAMABLE_OCELOT.get(), level);
+            } else {
+                baby = EntityType.CAT.create(level);
+                if (baby != null) {
+                    // Inherit vanilla parent's variant pattern instead of defaulting to Tuxedo
+                    baby.setVariant(vanillaParent.getVariant());
+                }
+            }
+        } else {
+            return null;
+        }
+
+        // 3. Apply shared properties once
+        if (baby != null) {
             baby.setPos(this.getX(), this.getY(), this.getZ());
 
-            UUID uuid = this.getOwnerUUID();
-            if (uuid != null) {
-                baby.setOwnerUUID(uuid);
+            UUID ownerUuid = this.getOwnerUUID();
+            if (ownerUuid != null) {
+                baby.setOwnerUUID(ownerUuid);
                 baby.setTame(true);
             }
-            return baby;
         }
 
-        // TamableOcelot × Cat → coin flip
-        if (otherParent instanceof Cat) {
-            if (random.nextBoolean()) {
-                // TamableOcelot kitten
-                TamableOcelot baby = new TamableOcelot(EntityInit.TAMABLE_OCELOT.get(), level);
-                baby.setPos(this.getX(), this.getY(), this.getZ());
-
-                UUID uuid = this.getOwnerUUID();
-                if (uuid != null) {
-                    baby.setOwnerUUID(uuid);
-                    baby.setTame(true);
-                }
-                return baby;
-            } else {
-                // Vanilla Cat kitten
-                Cat baby = EntityType.CAT.create(level);
-                if (baby != null) {
-                    baby.setPos(this.getX(), this.getY(), this.getZ());
-
-                    UUID uuid = this.getOwnerUUID();
-                    if (uuid != null) {
-                        baby.setOwnerUUID(uuid);
-                        baby.setTame(true);
-                    }
-                }
-                return baby;
-            }
-        }
-
-        return null;
+        return baby;
     }
 }

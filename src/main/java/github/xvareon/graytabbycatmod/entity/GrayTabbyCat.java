@@ -45,7 +45,7 @@ public class GrayTabbyCat extends Cat {
 
         float[] possibleSizes = {0.5f, 0.6f, 0.75f, 0.85f, 0.9f, 1.0f, 1.1f, 1.2f, 1.25f};
 
-        // Assign a random color variant
+        // Assign a random color and size variant
         if (!level.isClientSide) {
             setSizeMultiplier(possibleSizes[random.nextInt(possibleSizes.length)]);
             setGrayTabbyVariant(GrayTabbyCatVariant.getRandomVariant(random));
@@ -113,7 +113,6 @@ public class GrayTabbyCat extends Cat {
         this.refreshDimensions(); // Ensure hitbox updates
     }
 
-    // For Dye saves
     @Override
     public void addAdditionalSaveData(@NotNull CompoundTag compound) {
         super.addAdditionalSaveData(compound);
@@ -174,56 +173,45 @@ public class GrayTabbyCat extends Cat {
     @Override
     public boolean canMate(@NotNull Animal other) {
         if (other == this) return false;
-        if (!(other instanceof Cat)) return false; // accept both vanilla Cat and GrayTabbyCat
-        return this.isInLove() && other.isInLove();
+        if (!(other instanceof Cat otherCat)) return false;
+        return this.isTame() && otherCat.isTame() && this.isInLove() && otherCat.isInLove();
     }
 
     @Override
     public Cat getBreedOffspring(@NotNull ServerLevel level, @NotNull AgeableMob otherParent) {
-        RandomSource random = level.getRandom();
+        Cat baby;
 
-        // GrayTabby × GrayTabby → always GrayTabby
+        // 1. GrayTabby × GrayTabby → always GrayTabby
         if (otherParent instanceof GrayTabbyCat) {
-            GrayTabbyCat baby = new GrayTabbyCat(EntityInit.GRAY_TABBY_CAT.get(), level);
+            baby = new GrayTabbyCat(EntityInit.GRAY_TABBY_CAT.get(), level);
+        }
+        // 2. GrayTabby × Vanilla Cat → 50/50 chance
+        else if (otherParent instanceof Cat vanillaParent) {
+            boolean isGrayTabby = level.getRandom().nextBoolean();
+            if (isGrayTabby) {
+                baby = new GrayTabbyCat(EntityInit.GRAY_TABBY_CAT.get(), level);
+            } else {
+                baby = EntityType.CAT.create(level);
+                if (baby != null) {
+                    // Inherit the vanilla parent's variant instead of defaulting to Tuxedo
+                    baby.setVariant(vanillaParent.getVariant());
+                }
+            }
+        } else {
+            return null;
+        }
+
+        // 3. Apply shared properties once
+        if (baby != null) {
             baby.setPos(this.getX(), this.getY(), this.getZ());
 
-            UUID uuid = this.getOwnerUUID();
-            if (uuid != null) {
-                baby.setOwnerUUID(uuid);
+            UUID ownerUuid = this.getOwnerUUID();
+            if (ownerUuid != null) {
+                baby.setOwnerUUID(ownerUuid);
                 baby.setTame(true);
             }
-            return baby;
         }
 
-        // GrayTabby × Cat → coin flip
-        if (otherParent instanceof Cat) {
-            if (random.nextBoolean()) {
-                // GrayTabby kitten
-                GrayTabbyCat baby = new GrayTabbyCat(EntityInit.GRAY_TABBY_CAT.get(), level);
-                baby.setPos(this.getX(), this.getY(), this.getZ());
-
-                UUID uuid = this.getOwnerUUID();
-                if (uuid != null) {
-                    baby.setOwnerUUID(uuid);
-                    baby.setTame(true);
-                }
-                return baby;
-            } else {
-                // Vanilla Cat kitten
-                Cat baby = EntityType.CAT.create(level);
-                if (baby != null) {
-                    baby.setPos(this.getX(), this.getY(), this.getZ());
-
-                    UUID uuid = this.getOwnerUUID();
-                    if (uuid != null) {
-                        baby.setOwnerUUID(uuid);
-                        baby.setTame(true);
-                    }
-                }
-                return baby;
-            }
-        }
-
-        return null;
+        return baby;
     }
 }
