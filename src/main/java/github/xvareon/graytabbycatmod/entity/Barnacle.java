@@ -19,6 +19,7 @@ import net.minecraft.world.entity.animal.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
@@ -193,7 +194,23 @@ public class Barnacle extends Squid {
     }
 
     public static boolean canSpawn(EntityType<Barnacle> entityType, LevelAccessor level, MobSpawnType spawnType, BlockPos position, RandomSource random) {
-        return Barnacle.checkSurfaceWaterAnimalSpawnRules(entityType, level, spawnType, position, random);
+        // 1. Basic water spawn check
+        if (!Barnacle.checkSurfaceWaterAnimalSpawnRules(entityType, level, spawnType, position, random)) {
+            return false;
+        }
+
+        // 2. Perform a fast search for ANY existing Barnacle within 128 blocks
+        AABB checkArea = new AABB(position).inflate(128.0D);
+
+        // Using a predicate ensures Minecraft stops searching the moment it finds 1 Barnacle
+        boolean barnacleExists = !level.getEntitiesOfClass(
+                Barnacle.class,
+                checkArea,
+                barnacle -> true
+        ).isEmpty();
+
+        // Spawn ONLY if no other Barnacles were found
+        return !barnacleExists;
     }
 
     @Override
