@@ -63,6 +63,9 @@ public class CreativeTabInit {
         if(event.getTabKey() == CreativeModeTabs.SPAWN_EGGS) {
             event.getEntries().putAfter(ItemInit.GRAY_TABBY_CAT_SPAWN_EGG.get().getDefaultInstance(), ItemInit.TAMABLE_OCELOT_SPAWN_EGG.get().getDefaultInstance(), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
         }
+        if(event.getTabKey() == CreativeModeTabs.SPAWN_EGGS) {
+            event.getEntries().putAfter(ItemInit.TAMABLE_OCELOT_SPAWN_EGG.get().getDefaultInstance(), ItemInit.DOGGO_SPAWN_EGG.get().getDefaultInstance(), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
+        }
 
         if(event.getTab() == GRAY_TABBY_CAT_TAB.get()) {
             event.accept(ItemInit.GLOWING_OBSIDIAN.get());
