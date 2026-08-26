@@ -160,14 +160,26 @@ public class Doggo extends Wolf {
         Wolf baby;
 
         // 1. Doggo × Doggo → always Doggo
-        if (otherParent instanceof Doggo) {
+        if (otherParent instanceof Doggo otherDoggo) {
             baby = new Doggo(EntityInit.DOGGO.get(), level);
+
+            // Inherit variant from one of the parents (randomly choose mother or father)
+            DoggoVariant inheritedVariant = level.getRandom().nextBoolean()
+                    ? this.getDoggoVariant()
+                    : otherDoggo.getDoggoVariant();
+            ((Doggo) baby).setDoggoVariant(inheritedVariant);
+            ((Doggo) baby).setSizeMultiplier(inheritedVariant.getDefaultSize());
         }
         // 2. Doggo × Vanilla Wolf → 50/50 chance
         else if (otherParent instanceof Wolf vanillaParent) {
             boolean isDoggo = level.getRandom().nextBoolean();
             if (isDoggo) {
                 baby = new Doggo(EntityInit.DOGGO.get(), level);
+
+                // Inherit Doggo variant from the Doggo parent
+                DoggoVariant inheritedVariant = this.getDoggoVariant();
+                ((Doggo) baby).setDoggoVariant(inheritedVariant);
+                ((Doggo) baby).setSizeMultiplier(inheritedVariant.getDefaultSize());
             } else {
                 baby = EntityType.WOLF.create(level);
             }
