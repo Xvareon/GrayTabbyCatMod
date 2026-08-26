@@ -12,7 +12,7 @@ Added the Gray Tabby Cat mob:
 Some extra features this mod includes:
 (How are these related to the cat?)
 
-Added  the Doggo mob:
+Added the Doggo mob:
 - Spawns in all taiga biomes rarely. This also includes modded biomes which has the #minecraft:is_taiga biome tag.
 - Has 14 different variants.
 - Can breed with vanilla wolves, and the offspring will be a random variant of the parents.
