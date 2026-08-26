@@ -11,5 +11,7 @@
   "entity.graytabbycatmod.lightning_charge": "Lightning Charge",
   "item.graytabbycatmod.lightning_charge": "Lightning Charge",
   "item.graytabbycatmod.tamable_ocelot_spawn_egg": "Spawn Tamable Ocelot",
-  "entity.graytabbycatmod.tamable_ocelot": "Ocelot"
+  "entity.graytabbycatmod.tamable_ocelot": "Ocelot",
+  "item.graytabbycatmod.doggo_spawn_egg": "Spawn Doggo",
+  "entity.graytabbycatmod.doggo": "Doggo"
 }

@@ -2,6 +2,7 @@ package github.xvareon.graytabbycatmod.events;
 
 import github.xvareon.graytabbycatmod.GrayTabbyCatMod;
 import github.xvareon.graytabbycatmod.entity.Barnacle;
+import github.xvareon.graytabbycatmod.entity.Doggo;
 import github.xvareon.graytabbycatmod.entity.GrayTabbyCat;
 import github.xvareon.graytabbycatmod.entity.TamableOcelot;
 import github.xvareon.graytabbycatmod.init.EntityInit;
@@ -21,6 +22,7 @@ public class CommonModEvents {
         event.put(EntityInit.GRAY_TABBY_CAT.get(), GrayTabbyCat.createAttributes().build());
         event.put(EntityInit.BARNACLE.get(), Barnacle.createAttributes().build());
         event.put(EntityInit.TAMABLE_OCELOT.get(), TamableOcelot.createAttributes().build());
+        event.put(EntityInit.DOGGO.get(), Doggo.createAttributes().build());
     }
 
     @SubscribeEvent
@@ -44,6 +46,13 @@ public class CommonModEvents {
                 SpawnPlacements.Type.ON_GROUND,
                 Heightmap.Types.WORLD_SURFACE,
                 TamableOcelot::canSpawn,
+                SpawnPlacementRegisterEvent.Operation.OR
+        );
+        event.register(
+                EntityInit.DOGGO.get(),
+                SpawnPlacements.Type.ON_GROUND,
+                Heightmap.Types.WORLD_SURFACE,
+                Doggo::canSpawn,
                 SpawnPlacementRegisterEvent.Operation.OR
         );
     }

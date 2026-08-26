@@ -36,4 +36,7 @@ public class ItemInit {
 
     public static final RegistryObject<ForgeSpawnEggItem> TAMABLE_OCELOT_SPAWN_EGG = addToTab(ITEMS.register("tamable_ocelot_spawn_egg",
             () -> new ForgeSpawnEggItem(EntityInit.TAMABLE_OCELOT, 0xF9B233, 0x493C2B, new Item.Properties())));
+
+    public static final RegistryObject<ForgeSpawnEggItem> DOGGO_SPAWN_EGG = addToTab(ITEMS.register("doggo_spawn_egg",
+            () -> new ForgeSpawnEggItem(EntityInit.DOGGO, 0x3b2f29, 0x1c1816, new Item.Properties())));
 }

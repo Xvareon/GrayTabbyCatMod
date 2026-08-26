@@ -30,6 +30,12 @@ public class EntityInit {
                     .build(new ResourceLocation(GrayTabbyCatMod.MODID, "tamable_ocelot").toString())
     );
 
+    public static final RegistryObject<EntityType<Doggo>> DOGGO = ENTITIES.register("doggo",
+            () -> EntityType.Builder.of(Doggo::new, MobCategory.CREATURE)
+                    .sized(1.0f, 1.0f)
+                    .build(new ResourceLocation(GrayTabbyCatMod.MODID, "doggo").toString())
+    );
+
     public static final RegistryObject<EntityType<DragonFireball>> DRAGON_FIREBALL = ENTITIES.register("dragon_fireball",
             () -> EntityType.Builder.<DragonFireball>of(DragonFireball::new, MobCategory.MISC)
                     .sized(0.5f, 0.5f)
