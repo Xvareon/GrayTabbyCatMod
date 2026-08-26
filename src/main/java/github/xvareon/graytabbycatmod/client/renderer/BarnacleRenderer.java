@@ -16,12 +16,12 @@ import java.util.Map;
 public class BarnacleRenderer extends MobRenderer<Barnacle, BarnacleModel<Barnacle>> {
     // Map of textures for different barnacle variants
     private static final Map<BarnacleVariant, ResourceLocation> TEXTURES = Map.of(
-            BarnacleVariant.DEFAULT, new ResourceLocation(GrayTabbyCatMod.MODID, "textures/entity/barnacle.png"),
-            BarnacleVariant.BLUE, new ResourceLocation(GrayTabbyCatMod.MODID, "textures/entity/barnacle_blue.png"),
-            BarnacleVariant.RED, new ResourceLocation(GrayTabbyCatMod.MODID, "textures/entity/barnacle_red.png"),
-            BarnacleVariant.YELLOW, new ResourceLocation(GrayTabbyCatMod.MODID, "textures/entity/barnacle_yellow.png"),
-            BarnacleVariant.WHITE, new ResourceLocation(GrayTabbyCatMod.MODID, "textures/entity/barnacle_white.png"),
-            BarnacleVariant.BLACK, new ResourceLocation(GrayTabbyCatMod.MODID, "textures/entity/barnacle_black.png")
+            BarnacleVariant.DEFAULT, new ResourceLocation(GrayTabbyCatMod.MODID, "textures/entity/barnacle/barnacle.png"),
+            BarnacleVariant.BLUE, new ResourceLocation(GrayTabbyCatMod.MODID, "textures/entity/barnacle/barnacle_blue.png"),
+            BarnacleVariant.RED, new ResourceLocation(GrayTabbyCatMod.MODID, "textures/entity/barnacle/barnacle_red.png"),
+            BarnacleVariant.YELLOW, new ResourceLocation(GrayTabbyCatMod.MODID, "textures/entity/barnacle/barnacle_yellow.png"),
+            BarnacleVariant.WHITE, new ResourceLocation(GrayTabbyCatMod.MODID, "textures/entity/barnacle/barnacle_white.png"),
+            BarnacleVariant.BLACK, new ResourceLocation(GrayTabbyCatMod.MODID, "textures/entity/barnacle/barnacle_black.png")
     );
 
     public BarnacleRenderer(EntityRendererProvider.Context context) {

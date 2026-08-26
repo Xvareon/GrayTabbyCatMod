@@ -15,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class TamableOcelotRenderer extends MobRenderer<TamableOcelot, CatModel<TamableOcelot>> {
 
-    public static final ResourceLocation TEXTURE = new ResourceLocation(GrayTabbyCatMod.MODID, "textures/entity/tamable_ocelot.png");
+    public static final ResourceLocation TEXTURE = new ResourceLocation(GrayTabbyCatMod.MODID, "textures/entity/tameable_ocelot/tamable_ocelot.png");
 
     private static final ResourceLocation COLLAR = new ResourceLocation(GrayTabbyCatMod.MODID, "textures/collar.png");
 
