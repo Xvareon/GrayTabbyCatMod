@@ -60,20 +60,20 @@ public class DoggoRenderer extends MobRenderer<Doggo, WolfModel<Doggo>> {
     // Tamed Doggos
     private static final Map<DoggoVariant, ResourceLocation> TAMED_TEXTURES =
             Map.copyOf(new HashMap<>(Map.ofEntries(
-                    Map.entry(DoggoVariant.OGGIE, new ResourceLocation(GrayTabbyCatMod.MODID, "textures/entity/doggo/oggie_tamed.png")),
-                    Map.entry(DoggoVariant.PEANUT, new ResourceLocation(GrayTabbyCatMod.MODID, "textures/entity/doggo/peanut_tamed.png")),
-                    Map.entry(DoggoVariant.NUGGETS, new ResourceLocation(GrayTabbyCatMod.MODID, "textures/entity/doggo/nuggets_tamed.png")),
-                    Map.entry(DoggoVariant.BEAGLE, new ResourceLocation(GrayTabbyCatMod.MODID, "textures/entity/doggo/beagle_tamed.png")),
-                    Map.entry(DoggoVariant.BLACK_MOUNTAIN_FEIST, new ResourceLocation(GrayTabbyCatMod.MODID, "textures/entity/doggo/black_mountain_feist_tamed.png")),
-                    Map.entry(DoggoVariant.BLOCCO, new ResourceLocation(GrayTabbyCatMod.MODID, "textures/entity/doggo/blocco_tamed.png")),
-                    Map.entry(DoggoVariant.BORDER_COLLIE, new ResourceLocation(GrayTabbyCatMod.MODID, "textures/entity/doggo/border_collie_tamed.png")),
-                    Map.entry(DoggoVariant.BOSTON_TERRIER, new ResourceLocation(GrayTabbyCatMod.MODID, "textures/entity/doggo/boston_terrier_tamed.png")),
-                    Map.entry(DoggoVariant.GOLDEN_RETRIEVER, new ResourceLocation(GrayTabbyCatMod.MODID, "textures/entity/doggo/golden_retriever_tamed.png")),
-                    Map.entry(DoggoVariant.PUG, new ResourceLocation(GrayTabbyCatMod.MODID, "textures/entity/doggo/pug_tamed.png")),
-                    Map.entry(DoggoVariant.RED_SHIBA_INU, new ResourceLocation(GrayTabbyCatMod.MODID, "textures/entity/doggo/red_shiba_inu_tamed.png")),
-                    Map.entry(DoggoVariant.SIBERIAN_HUSKY, new ResourceLocation(GrayTabbyCatMod.MODID, "textures/entity/doggo/siberian_husky_tamed.png")),
-                    Map.entry(DoggoVariant.ST_BERNARD, new ResourceLocation(GrayTabbyCatMod.MODID, "textures/entity/doggo/st_bernard_tamed.png")),
-                    Map.entry(DoggoVariant.WHITE_TERRIER, new ResourceLocation(GrayTabbyCatMod.MODID, "textures/entity/doggo/white_terrier_tamed.png"))
+                    Map.entry(DoggoVariant.OGGIE, new ResourceLocation(GrayTabbyCatMod.MODID, "textures/entity/doggo/oggie_tame.png")),
+                    Map.entry(DoggoVariant.PEANUT, new ResourceLocation(GrayTabbyCatMod.MODID, "textures/entity/doggo/peanut_tame.png")),
+                    Map.entry(DoggoVariant.NUGGETS, new ResourceLocation(GrayTabbyCatMod.MODID, "textures/entity/doggo/nuggets_tame.png")),
+                    Map.entry(DoggoVariant.BEAGLE, new ResourceLocation(GrayTabbyCatMod.MODID, "textures/entity/doggo/beagle_tame.png")),
+                    Map.entry(DoggoVariant.BLACK_MOUNTAIN_FEIST, new ResourceLocation(GrayTabbyCatMod.MODID, "textures/entity/doggo/black_mountain_feist_tame.png")),
+                    Map.entry(DoggoVariant.BLOCCO, new ResourceLocation(GrayTabbyCatMod.MODID, "textures/entity/doggo/blocco_tame.png")),
+                    Map.entry(DoggoVariant.BORDER_COLLIE, new ResourceLocation(GrayTabbyCatMod.MODID, "textures/entity/doggo/border_collie_tame.png")),
+                    Map.entry(DoggoVariant.BOSTON_TERRIER, new ResourceLocation(GrayTabbyCatMod.MODID, "textures/entity/doggo/boston_terrier_tame.png")),
+                    Map.entry(DoggoVariant.GOLDEN_RETRIEVER, new ResourceLocation(GrayTabbyCatMod.MODID, "textures/entity/doggo/golden_retriever_tame.png")),
+                    Map.entry(DoggoVariant.PUG, new ResourceLocation(GrayTabbyCatMod.MODID, "textures/entity/doggo/pug_tame.png")),
+                    Map.entry(DoggoVariant.RED_SHIBA_INU, new ResourceLocation(GrayTabbyCatMod.MODID, "textures/entity/doggo/red_shiba_inu_tame.png")),
+                    Map.entry(DoggoVariant.SIBERIAN_HUSKY, new ResourceLocation(GrayTabbyCatMod.MODID, "textures/entity/doggo/siberian_husky_tame.png")),
+                    Map.entry(DoggoVariant.ST_BERNARD, new ResourceLocation(GrayTabbyCatMod.MODID, "textures/entity/doggo/st_bernard_tame.png")),
+                    Map.entry(DoggoVariant.WHITE_TERRIER, new ResourceLocation(GrayTabbyCatMod.MODID, "textures/entity/doggo/white_terrier_tame.png"))
             )));
 
     private static final ResourceLocation COLLAR = new ResourceLocation(GrayTabbyCatMod.MODID, "textures/collar.png");
