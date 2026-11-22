@@ -40,6 +40,7 @@ Soul Sand Glass:
 - It gives a weaker bubble column but can be stacked on top of each other while in water.
 
 Honey Pot Block:
+- Crafted with 7 bricks and 1 honey comb
 - Can store up to 4 honey bottles or a honey block
 - Putting honey comb gives it a 33% chance to produce honey
 - Has compatibility with Bumblezone and Create honey buckets
