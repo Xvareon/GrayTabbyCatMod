@@ -39,6 +39,14 @@ Soul Sand Glass:
 - Can be broken with bare hands or any tool, will always drop.
 - It gives a weaker bubble column but can be stacked on top of each other while in water.
 
+Honey Pot Block:
+- Can store up to 4 honey bottles or a honey block
+- Putting honey comb gives it a 33% chance to produce honey
+- Has compatibility with Bumblezone and Create honey buckets
+- Has compatibility with Buzzier Bees' honey apple, bread, and glazed porkchop
+- Honey combs (33% chance but consumed) and honey blocks can be put into a hopper and be outputted when the pot becomes full using another hopper again
+- Can output redstone signal based on honey stored
+
 Lightning Charge:
 - Crafted with 8 fire charges and a prismarine crystal at the middle.
 - Summons a lightning bolt upon hit. This deals an additional damage to the first mob it hits.
