@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "BHB",
+    "B B",
+    "BBB"
+  ],
+  "key": {
+    "H": {
+      "item": "minecraft:honeycomb"
+    },
+    "B": {
+      "item": "minecraft:brick"
+    }
+  },
+  "result": {
+    "item": "graytabbycatmod:honey_pot",
+    "count": 1
+  }
+}

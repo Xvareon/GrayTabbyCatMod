@@ -13,5 +13,6 @@
   "item.graytabbycatmod.tamable_ocelot_spawn_egg": "Spawn Tamable Ocelot",
   "entity.graytabbycatmod.tamable_ocelot": "Ocelot",
   "item.graytabbycatmod.doggo_spawn_egg": "Spawn Doggo",
-  "entity.graytabbycatmod.doggo": "Doggo"
+  "entity.graytabbycatmod.doggo": "Doggo",
+  "block.graytabbycatmod.honey_pot": "Honey Pot"
 }

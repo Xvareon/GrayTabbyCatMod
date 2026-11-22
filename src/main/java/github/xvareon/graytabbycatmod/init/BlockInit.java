@@ -2,6 +2,7 @@ package github.xvareon.graytabbycatmod.init;
 
 import github.xvareon.graytabbycatmod.GrayTabbyCatMod;
 import github.xvareon.graytabbycatmod.block.GlowingObsidianBlock;
+import github.xvareon.graytabbycatmod.block.HoneyPotBlock;
 import github.xvareon.graytabbycatmod.block.SoulSandGlassBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -32,4 +33,7 @@ public class BlockInit {
                     .mapColor(MapColor.COLOR_BROWN)
                     .instrument(NoteBlockInstrument.FLUTE)
             ));
+
+    public static final RegistryObject<Block> HONEY_POT = BLOCKS.register("honey_pot",
+            HoneyPotBlock::new);
 }

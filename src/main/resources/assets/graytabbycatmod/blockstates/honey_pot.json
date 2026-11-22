@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "honey_level=0": {
+      "model": "graytabbycatmod:block/honey_pot"
+    },
+    "honey_level=1": {
+      "model": "graytabbycatmod:block/honey_pot_1"
+    },
+    "honey_level=2": {
+      "model": "graytabbycatmod:block/honey_pot_2"
+    },
+    "honey_level=3": {
+      "model": "graytabbycatmod:block/honey_pot_3"
+    },
+    "honey_level=4": {
+      "model": "graytabbycatmod:block/honey_pot_4"
+    }
+  }
+}

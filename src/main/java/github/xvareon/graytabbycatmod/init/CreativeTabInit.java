@@ -51,6 +51,9 @@ public class CreativeTabInit {
         if(event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS) {
             event.getEntries().putAfter(Items.GILDED_BLACKSTONE.getDefaultInstance(), ItemInit.SOUL_SAND_GLASS.get().getDefaultInstance(), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
         }
+        if(event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS) {
+            event.getEntries().putAfter(Items.GILDED_BLACKSTONE.getDefaultInstance(), ItemInit.HONEY_POT.get().getDefaultInstance(), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
+        }
         if(event.getTabKey() == CreativeModeTabs.COMBAT) {
             event.getEntries().putAfter(Items.SHIELD.getDefaultInstance(), ItemInit.DRAGON_FIREBALL.get().getDefaultInstance(), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
         }
@@ -70,6 +73,7 @@ public class CreativeTabInit {
         if(event.getTab() == GRAY_TABBY_CAT_TAB.get()) {
             event.accept(ItemInit.GLOWING_OBSIDIAN.get());
             event.accept(ItemInit.SOUL_SAND_GLASS.get());
+            event.accept(ItemInit.HONEY_POT.get());
             event.accept(ItemInit.DRAGON_FIREBALL.get());
             event.accept(ItemInit.LIGHTNING_CHARGE.get());
         }

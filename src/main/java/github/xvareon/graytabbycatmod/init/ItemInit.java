@@ -24,6 +24,9 @@ public class ItemInit {
     public static final RegistryObject<BlockItem> SOUL_SAND_GLASS = ITEMS.register("soul_sand_glass",
             () -> new BlockItem(BlockInit.SOUL_SAND_GLASS.get(), new Item.Properties().rarity(Rarity.UNCOMMON)
             ));
+    public static final RegistryObject<BlockItem> HONEY_POT = ITEMS.register("honey_pot",
+            () -> new BlockItem(BlockInit.HONEY_POT.get(), new Item.Properties().rarity(Rarity.UNCOMMON)
+            ));
 
     public static final RegistryObject<Item> DRAGON_FIREBALL = ITEMS.register("dragon_fireball",
             () -> new DragonFireball(new Item.Properties().rarity(Rarity.EPIC)));
